@@ -23,6 +23,7 @@ Discord BOT AdminAFK will make life better for CS:GO Admins
 
 # Usage guide
 
+* Run main.py
 * !help - List of available commands
 
 **ADMIN commands**
