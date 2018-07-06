@@ -35,29 +35,14 @@
 # termes.
 # ----------------------------------------------------------------------------
 
-############################
-##########Discord###########
-############################
+#Status of commands (0 = disable, 1 = enable)
+status_commands = {"matchs": "1", "connect": "1", "bracket": "1", "participants": "1", "flipcoin": "1", "report": "1", "maps": "1", "purge": "1", "rules": "1", "ebot": "1", "demo": "1", "gotv": "1"}
 
-ADMIN_ROLE = '' #Name of admin role
+#State of flipcoins
+flipcoin = ["heads", "tails"]
 
-GOTV_CHANNEL = '' #ID of the channel on discord
-ANNOUNCEMENT = '' #ID of the channel on discord
+#eBot status
+ebot_status = ["not started", "starting", "warmup knife round", "knife round", "end of the knife round", "warmup 1st side", "first side", "warmup 2nd side", "econd side", "warmup overtime", "first side OT", "warmup 2nd side OT", "second side OT", "finished", "archived"]
 
-TOKEN = '' #Token of discord BOT
-
-############################
-############eBot############
-############################
-
-EBOT_HOSTNAME = ''; #Hostname of eBot Database
-EBOT_PORT = ''; #Port of eBot Database
-EBOT_DBNAME = ''; #Dbname of eBot Database
-EBOT_USERNAME = '';  #Username of eBot Database
-EBOT_PASSWORD = ''; #Password of eBot Database
-
-############################
-#########AdminAFK###########
-############################
-
-URL_ADMINAFK = '' #BASE_URL of AdminAFK
+#Active Duty Map Pool csgo
+mapool_csgo = ["de_dust2", "de_cache", "de_inferno", "de_train", "de_overpass", "de_mirage", "de_nuke"]

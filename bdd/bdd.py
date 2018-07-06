@@ -55,9 +55,9 @@ def db_select():
             return cursor.fetchall()
     except pymysql.err.InternalError as e:
         code, msg = e.args
-        print("Code : " + code + ", erreur : " + msg)
+        print("Code : " + code + ", error : " + msg)
     except:
-        print("Erreur")
+        print("Error")
      
 def db_disconnect():
     connection.close()

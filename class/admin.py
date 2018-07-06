@@ -34,11 +34,19 @@
 # pris connaissance de la licence CeCILL, et que vous en avez accepté les
 # termes.
 # ----------------------------------------------------------------------------
+
+import sys
 import discord
 from discord.ext import commands
+import random
+
+sys.path.append('../')
+sys.path.append('../config/')
+sys.path.append('../functions/')
+
 import config
 import static_var
-import random
+import check_permissions
 
 class Admin():
 
@@ -49,8 +57,7 @@ class Admin():
     async def maps(self, ctx):
         """Get five rounds of random maps"""
         if static_var.status_commands['maps'] == "1":
-            role_names = [role.name for role in ctx.message.author.roles]
-            if config.ADMIN_ROLE in role_names:
+            if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE):
                 maps = random.sample(static_var.mapool_csgo, 5)
                 msg = '@here Maps of the tournaments : ```'
                 msg = msg + "Round 1 : {0}\n".format(maps[0])
@@ -64,8 +71,7 @@ class Admin():
     @commands.command(pass_context=True)
     async def flipcoin(self, ctx, *user):
         """Start a flipcoin (heads/tails)"""
-        role_names = [role.name for role in ctx.message.author.roles]
-        if config.ADMIN_ROLE in role_names:
+        if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE):
             if static_var.status_commands['flipcoin'] == "1":
                 msg = ""
                 if user:
@@ -78,10 +84,24 @@ class Admin():
                 await self.bot.say(msg)
 
     @commands.command(pass_context=True)
+    async def demo(self, ctx, demo_id :int, *user):
+        """Generate an URL for download a demo on eBot"""
+        if static_var.status_commands['demo'] == "1":
+            if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE):
+                msg = ""
+                if user:
+                    for each_user in user:
+                        msg = msg + "{0} ".format(each_user)
+                else:
+                    msg = "{0.message.author.mention} ".format(ctx)
+                link = '{0}matchs/demo/{1}'.format(config.URL_EBOT, demo_id)
+                msg = msg + "the download link is available here -> {0} from now on you have 10 minutes to give us the suspicious ticks (3 minimums) after this time the request will be automatically refused".format(link)
+                await self.bot.send_message(discord.Object(id=config.GOTV_CHANNEL), msg)
+    
+    @commands.command(pass_context=True)
     async def enable(self, ctx, command):
         """Enable command"""
-        role_names = [role.name for role in ctx.message.author.roles]
-        if config.ADMIN_ROLE in role_names:
+        if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE):
             if command in static_var.status_commands:
                 static_var.status_commands[command] = "1"
                 msg = '{0.message.author.mention} -> Command !{1} has been enabled'.format(ctx, command)
@@ -92,8 +112,7 @@ class Admin():
     @commands.command(pass_context=True)
     async def disable(self, ctx, command :str):
         """Disable command"""
-        role_names = [role.name for role in ctx.message.author.roles]
-        if config.ADMIN_ROLE in role_names:
+        if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE):
             if command in static_var.status_commands:
                 static_var.status_commands[command] = "0"
                 msg = '{0.message.author.mention} -> Command !{1} has been disabled'.format(ctx, command)
@@ -104,8 +123,7 @@ class Admin():
     @commands.command(pass_context=True)
     async def status(self, ctx, command :str):
         """Status of a command"""
-        role_names = [role.name for role in ctx.message.author.roles]
-        if config.ADMIN_ROLE in role_names:
+        if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE):
             if command == 'enable' or command == 'disable' or command == 'status':
                 msg = '{0.message.author.mention} -> Command !enable, !disable and !status are always enable'.format(ctx)
             else:
@@ -121,16 +139,16 @@ class Admin():
     @commands.command(pass_context=True)
     async def purge(self, ctx, number :int):
         """Purge messages"""
-        role_names = [role.name for role in ctx.message.author.roles]
-        if config.ADMIN_ROLE in role_names:
-            if number < 101 and number > 1:
-                mgs = []
-                async for x in self.bot.logs_from(ctx.message.channel, limit = number):
-                    mgs.append(x)
-                await self.bot.delete_messages(mgs)
-            else:
-                msg = '{0.message.author.mention} -> AdminAFK can only delete messages in the range of [2, 100]'.format(ctx)
-                await self.bot.say(msg)
+        if static_var.status_commands['purge'] == "1":
+            if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE):
+                if number < 101 and number > 1:
+                    mgs = []
+                    async for x in self.bot.logs_from(ctx.message.channel, limit = number):
+                        mgs.append(x)
+                    await self.bot.delete_messages(mgs)
+                else:
+                    msg = '{0.message.author.mention} -> AdminAFK can only delete messages in the range of [2, 100]'.format(ctx)
+                    await self.bot.say(msg)
 
 def setup(bot):
     bot.add_cog(Admin(bot))

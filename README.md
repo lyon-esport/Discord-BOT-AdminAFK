@@ -29,11 +29,12 @@ Discord BOT AdminAFK will make life better for CS:GO Admins
 **ADMIN commands**
 
 * !disable - Disable command
-* !enable  - Enablecommand
+* !enable  - Enable command
+* !status   - Status of a command
+* !purge    - Purge messages [2-100]
 * !flipcoin - Start a flipcoin (heads/tails)
 * !maps     - Get five rounds of random maps
-* !purge    - Purge messages
-* !status   - Status of a command
+* !demo		- Generate an URL for download a demo on eBot
 
 **USER commands**
 
@@ -42,6 +43,9 @@ Discord BOT AdminAFK will make life better for CS:GO Admins
 * !matchs       - Get info about matches on eBot
 * !participants - Get the link of participants
 * !report       - Get infos for report a player
+* !rules        - Get the link of rules
+* !gotv         - How to watch a demo ?
+* !ebot         - Get the link of eBot
 
 # Licence
 

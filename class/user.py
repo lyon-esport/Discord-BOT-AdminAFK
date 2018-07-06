@@ -34,11 +34,20 @@
 # pris connaissance de la licence CeCILL, et que vous en avez accepté les
 # termes.
 # ----------------------------------------------------------------------------
+
+import sys
 import discord
 from discord.ext import commands
+
+sys.path.append('../')
+sys.path.append('../config/')
+sys.path.append('../bdd/')
+sys.path.append('../functions/')
+
 import config
 import static_var
 import bdd
+import check_permissions
 
 class User():
 
@@ -67,7 +76,7 @@ class User():
                     matchs.append(row)
             for each_match in matchs:
                 if int(each_match['enable']) == 0:
-                     status = "Stoped"
+                     status = "Stopped"
                 else:
                       status = "Live"
                 if each_match['teama_name'] is None:
@@ -100,7 +109,7 @@ class User():
                     msg = msg + "{0} ".format(each_user)
             else:
                 msg = "{0.message.author.mention} ".format(ctx)
-            msg = msg + "-> Link of connect : {0}".format(link)
+            msg = msg + "-> Link of connect team : {0}".format(link)
             await self.bot.say(msg)
 
     @commands.command(pass_context=True)
@@ -135,7 +144,7 @@ class User():
 
     @commands.command(pass_context=True)
     async def report(self, ctx, *user):
-        """Get infos for report a player"""
+        """Get infos for report a player/team"""
         if static_var.status_commands['report'] == "1":
             msg = "Hello "
             link = config.URL_ADMINAFK +'pages/participants.php'
@@ -145,8 +154,52 @@ class User():
                     msg = msg + "{0} ".format(each_user)
             else:
                 msg = msg + "{0.message.author.mention} ".format(ctx)
-            msg = msg + " reply here for make a dispute with the name of your team and the opposant team. Admin Team will give you a link for download the GOTV after that you will have 10 minutes to found ticks (3 minimums)".format(link)
+            msg = msg + " reply here for make a dispute with the name of your team and the opposant team. Admin Team will give you a link for download the GOTV after that you will have 10 minutes to found ticks (3 minimums).".format(link)
             await self.bot.send_message(discord.Object(id=config.GOTV_CHANNEL), msg)
+
+    @commands.command(pass_context=True)
+    async def rules(self, ctx, *user):
+        """Get the link of rules"""
+        if static_var.status_commands['rules'] == "1":
+            msg = ""
+            link = config.RULES
+            role_names = [role.name for role in ctx.message.author.roles]
+            if user and config.ADMIN_ROLE in role_names:
+                for each_user in user:
+                    msg = msg + "{0} ".format(each_user)
+            else:
+                msg = "{0.message.author.mention} ".format(ctx)
+            msg = msg + "-> Link of rules : {0}".format(link)
+            await self.bot.say(msg)
+
+    @commands.command(pass_context=True)
+    async def ebot(self, ctx, *user):
+        """Get the link of eBot"""
+        if static_var.status_commands['ebot'] == "1":
+            msg = ""
+            link = config.URL_EBOT
+            role_names = [role.name for role in ctx.message.author.roles]
+            if user and config.ADMIN_ROLE in role_names:
+                for each_user in user:
+                    msg = msg + "{0} ".format(each_user)
+            else:
+                msg = "{0.message.author.mention} ".format(ctx)
+            msg = msg + "-> Link of eBot : {0}".format(link)
+            await self.bot.say(msg)
+
+    @commands.command(pass_context=True)
+    async def gotv(self, ctx, *user):
+        """How to watch a demo ?"""
+        if static_var.status_commands['gotv'] == "1":
+            msg = ""
+            role_names = [role.name for role in ctx.message.author.roles]
+            if user and config.ADMIN_ROLE in role_names:
+                for each_user in user:
+                    msg = msg + "{0} ".format(each_user)
+            else:
+                msg = "{0.message.author.mention}".format(ctx)
+            msg = msg + "To watch a demo :\n 1)Download the démo\n 2)Unzip the demo with winrar for example\n 3)Move the file <nom>.dem in a folder without accent for example on the desktop\n 4)Start CS:GO\n 5)Press simultaneously ```Shift``` and ```F2```\n 6)Press Load...\n 7)Select the file <nom>.dem\n 8)The game will launch the demo"
+            await self.bot.say(msg)
 
 def setup(bot):
     bot.add_cog(User(bot))
