@@ -59,7 +59,7 @@ class User():
         """Get info about matches on eBot"""
         if static_var.status_commands['matchs'] == "1":
             msg = ""
-            if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE):
+            if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE) and user:
                 for each_user in user:
                     msg = msg + "{0} ".format(each_user)
             else:
@@ -102,7 +102,7 @@ class User():
         if static_var.status_commands['connect'] == "1":
             msg = ""
             link = config.URL_ADMINAFK +'pages/view_connect.php'
-            if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE):
+            if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE) and user:
                 for each_user in user:
                     msg = msg + "{0} ".format(each_user)
             else:
@@ -116,7 +116,7 @@ class User():
         if static_var.status_commands['bracket'] == "1":
             msg = ""
             link = config.URL_ADMINAFK +'pages/bracket.php'
-            if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE):
+            if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE) and user:
                 for each_user in user:
                     msg = msg + "{0} ".format(each_user)
             else:
@@ -130,7 +130,7 @@ class User():
         if static_var.status_commands['participants'] == "1":
             msg = ""
             link = config.URL_ADMINAFK +'pages/participants.php'
-            if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE):
+            if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE) and user:
                 for each_user in user:
                     msg = msg + "{0} ".format(each_user)
             else:
@@ -144,7 +144,7 @@ class User():
         if static_var.status_commands['report'] == "1":
             msg = "Hello "
             link = config.URL_ADMINAFK +'pages/participants.php'
-            if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE):
+            if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE) and user:
                 for each_user in user:
                     msg = msg + "{0} ".format(each_user)
             else:
@@ -158,7 +158,7 @@ class User():
         if static_var.status_commands['rules'] == "1":
             msg = ""
             link = config.RULES
-            if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE):
+            if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE) and user:
                 for each_user in user:
                     msg = msg + "{0} ".format(each_user)
             else:
@@ -172,7 +172,7 @@ class User():
         if static_var.status_commands['ebot'] == "1":
             msg = ""
             link = config.URL_EBOT
-            if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE):
+            if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE) and user:
                 for each_user in user:
                     msg = msg + "{0} ".format(each_user)
             else:
@@ -185,12 +185,12 @@ class User():
         """How to watch a demo ?"""
         if static_var.status_commands['gotv'] == "1":
             msg = ""
-            if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE):
+            if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE) and user:
                 for each_user in user:
                     msg = msg + "{0} ".format(each_user)
             else:
-                msg = "{0.message.author.mention}".format(ctx)
-            msg = msg + "To watch a demo :\n 1)Download the démo\n 2)Unzip the demo with winrar for example\n 3)Move the file <nom>.dem in a folder without accent for example on the desktop\n 4)Start CS:GO\n 5)Press simultaneously ```Shift``` and ```F2```\n 6)Press Load...\n 7)Select the file <nom>.dem\n 8)The game will launch the demo"
+                msg = "{0.message.author.mention} ".format(ctx)
+            msg = msg + "To watch a demo :\n 1)Download the démo\n 2)Unzip the demo with winrar for example\n 3)Move the file <nom>.dem in a folder without accent for example on the desktop\n 4)Start CS:GO\n 5)Press simultaneously `Shift` and `F2`\n 6)Press Load...\n 7)Select the file <nom>.dem\n 8)The game will launch the demo"
             await self.bot.say(msg)
 
 def setup(bot):

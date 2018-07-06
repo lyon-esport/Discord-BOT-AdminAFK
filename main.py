@@ -41,6 +41,7 @@ from discord.ext import commands
 
 sys.path.append('config/')
 sys.path.append('class/')
+sys.path.append('bdd/')
 sys.path.append('functions/')
 
 import config
