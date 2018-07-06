@@ -59,8 +59,7 @@ class User():
         """Get info about matches on eBot"""
         if static_var.status_commands['matchs'] == "1":
             msg = ""
-            role_names = [role.name for role in ctx.message.author.roles]
-            if user and config.ADMIN_ROLE in role_names:
+            if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE):
                 for each_user in user:
                     msg = msg + "{0} ".format(each_user)
             else:
@@ -103,8 +102,7 @@ class User():
         if static_var.status_commands['connect'] == "1":
             msg = ""
             link = config.URL_ADMINAFK +'pages/view_connect.php'
-            role_names = [role.name for role in ctx.message.author.roles]
-            if user and config.ADMIN_ROLE in role_names:
+            if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE):
                 for each_user in user:
                     msg = msg + "{0} ".format(each_user)
             else:
@@ -118,8 +116,7 @@ class User():
         if static_var.status_commands['bracket'] == "1":
             msg = ""
             link = config.URL_ADMINAFK +'pages/bracket.php'
-            role_names = [role.name for role in ctx.message.author.roles]
-            if user and config.ADMIN_ROLE in role_names:
+            if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE):
                 for each_user in user:
                     msg = msg + "{0} ".format(each_user)
             else:
@@ -133,8 +130,7 @@ class User():
         if static_var.status_commands['participants'] == "1":
             msg = ""
             link = config.URL_ADMINAFK +'pages/participants.php'
-            role_names = [role.name for role in ctx.message.author.roles]
-            if user and config.ADMIN_ROLE in role_names:
+            if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE):
                 for each_user in user:
                     msg = msg + "{0} ".format(each_user)
             else:
@@ -148,8 +144,7 @@ class User():
         if static_var.status_commands['report'] == "1":
             msg = "Hello "
             link = config.URL_ADMINAFK +'pages/participants.php'
-            role_names = [role.name for role in ctx.message.author.roles]
-            if user and config.ADMIN_ROLE in role_names:
+            if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE):
                 for each_user in user:
                     msg = msg + "{0} ".format(each_user)
             else:
@@ -163,8 +158,7 @@ class User():
         if static_var.status_commands['rules'] == "1":
             msg = ""
             link = config.RULES
-            role_names = [role.name for role in ctx.message.author.roles]
-            if user and config.ADMIN_ROLE in role_names:
+            if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE):
                 for each_user in user:
                     msg = msg + "{0} ".format(each_user)
             else:
@@ -178,8 +172,7 @@ class User():
         if static_var.status_commands['ebot'] == "1":
             msg = ""
             link = config.URL_EBOT
-            role_names = [role.name for role in ctx.message.author.roles]
-            if user and config.ADMIN_ROLE in role_names:
+            if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE):
                 for each_user in user:
                     msg = msg + "{0} ".format(each_user)
             else:
@@ -192,8 +185,7 @@ class User():
         """How to watch a demo ?"""
         if static_var.status_commands['gotv'] == "1":
             msg = ""
-            role_names = [role.name for role in ctx.message.author.roles]
-            if user and config.ADMIN_ROLE in role_names:
+            if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE):
                 for each_user in user:
                     msg = msg + "{0} ".format(each_user)
             else:

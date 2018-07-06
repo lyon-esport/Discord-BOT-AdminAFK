@@ -41,6 +41,6 @@ from discord.ext import commands
 def check_if_it_is_bot(ctx):
     return ctx.message.author.id == bot.user.id
 
-def check_if_it_is_admin(ctx, ADMIN_ROLE):
+def check_if_it_is_admin(ctx, group_role):
     role_names = [role.name for role in ctx.message.author.roles]
-    return any(elem in ADMIN_ROLE  for elem in role_names)
+    return any(elem in group_role  for elem in role_names)
