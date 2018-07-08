@@ -54,19 +54,20 @@ class Admin():
         self.bot = bot
 
     @commands.command(pass_context=True)
-    async def maps(self, ctx):
-        """Get five rounds of random maps"""
+    async def maps(self, ctx, nb_round :int):
+        """Generate 1 to 7 rounds with random maps"""
         if static_var.status_commands['maps'] == "1":
             if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE):
-                maps = random.sample(static_var.mapool_csgo, 5)
-                msg = '@here Maps of the tournaments : ```'
-                msg = msg + "Round 1 : {0}\n".format(maps[0])
-                msg = msg + "Round 2 : {0}\n".format(maps[1])
-                msg = msg + "Round 3 : {0}\n".format(maps[2])
-                msg = msg + "Round 4 : {0}\n".format(maps[3])
-                msg = msg + "Round 5 : {0}\n".format(maps[4])
-                msg = msg + "```"
-                await self.bot.send_message(discord.Object(id=config.ANNOUNCEMENT), msg)
+                if nb_round < 8 and nb_round >0:
+                    maps = random.sample(static_var.mapool_csgo, nb_round)
+                    msg = '@here Maps of the tournaments : ```'
+                    for i in range(nb_round):
+                        msg = msg + "Round {0} : {1}\n".format(i+1, maps[i])
+                    msg = msg + "```"
+                    await self.bot.send_message(discord.Object(id=config.ANNOUNCEMENT), msg)
+                else:
+                    msg = 'You need to select a number in the range of [1;7]'
+                    await self.bot.say(msg)
 
     @commands.command(pass_context=True)
     async def flipcoin(self, ctx, *user):
