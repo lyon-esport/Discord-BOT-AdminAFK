@@ -37,6 +37,9 @@ Discord BOT AdminAFK will make life better for CS:GO Admins
 * !flipcoin - Start a flipcoin (heads/tails)
 * !maps     - Get five rounds of random maps
 * !demo		- Generate an URL for download a demo on eBot
+* !ping - Test bot connectivity
+* !mute - Add the role muted to the user
+* !unmute - Remove the role muted to the user
 
 **USER commands**
 
@@ -62,4 +65,3 @@ Copyright © Lyon e-Sport, 2018
 Contributor(s):
 
 -Ortega Ludovic - ludovic.ortega@lyon-esport.fr
-
