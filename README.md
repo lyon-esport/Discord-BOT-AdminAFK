@@ -11,7 +11,7 @@ Discord BOT AdminAFK will make life better for CS:GO Admins
 
 * Discord server
 * eBot 3.1 or newer
-* Python 3.6
+* Python 3.6 or >=3.5.3
 * Discord.py
 
 # Install guide
