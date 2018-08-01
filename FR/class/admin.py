@@ -212,7 +212,7 @@ class Admin():
                 t2 = time.perf_counter()
                 msg = 'Pong: {}ms !'.format(round((t2-t1)*1000))
                 emoji = "<:loudspeaker:473169555557187584>"
-                embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id), static_var.hex_colors_codes['green'], ctx.message.author.name, ctx.message.author.avatar_url, "Action", "Command used", "Name", "!ping", "", "", "")
+                embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id), static_var.hex_colors_codes['green'], ctx.message.author.name, ctx.message.author.avatar_url, "Action", "Command used", "Name", "!ping", "", "")
                 await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
             else:
                 msg = "{0.message.author.mention} cette commande est réservée aux admins".format(ctx)
