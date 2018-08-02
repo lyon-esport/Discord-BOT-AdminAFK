@@ -44,9 +44,10 @@ from discord.ext import commands
 from config import config, static_var
 from functions import check_permissions, logs
 
+from gettext import gettext as _
 
-class Admin():
 
+class Admin(object):
     def __init__(self, bot):
         self.bot = bot
 
@@ -76,25 +77,26 @@ class Admin():
     @commands.command(pass_context=True)
     async def flipcoin(self, ctx, *user):
         """Faire un pile ou face (pile/face)"""
-        if static_var.status_commands['flipcoin'] == "1":
-            if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE):
-                msg = ""
-                args = ""
-                if user:
-                    for each_user in user:
-                        msg = msg + "{0} ".format(each_user)
-                    args = msg
-                else:
-                    msg = "{0.message.author.mention} ".format(ctx)
-                choice = random.choice(static_var.flipcoin)
-                msg = msg + "-> {0}".format(choice)
-                emoji = "<:loudspeaker:473169555557187584>"
-                embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id), static_var.hex_colors_codes['green'], ctx.message.author.name, ctx.message.author.avatar_url, "Action", "Command used", "Name", "!flipcoin", "Arguments", args)
-                await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
-            else:
-                msg = "{0.message.author.mention} cette commande est réservée aux admins".format(ctx)
+        if not static_var.status_commands.get('flipcoin', False):
+            await ctx.send(_("{0.message.author.mention} this command is disabled").format(ctx))
+            return
+        if not check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE):
+            await ctx.send(_("{0.message.author.mention} this commands is restricted to the admins").format(ctx))
+            return
+
+        msg = ""
+        args = ""
+        if user:
+            for each_user in user:
+                msg = msg + "{0} ".format(each_user)
+            args = msg
         else:
-            msg = "{0.message.author.mention} cette commande est désactivée".format(ctx)
+            msg = "{0.message.author.mention} ".format(ctx)
+        choice = random.choice(static_var.flipcoin)
+        msg = msg + "-> {0}".format(choice)
+        emoji = "<:loudspeaker:473169555557187584>"
+        embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id), static_var.hex_colors_codes['green'], ctx.message.author.name, ctx.message.author.avatar_url, "Action", "Command used", "Name", "!flipcoin", "Arguments", args)
+        await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
         await ctx.send(msg)
 
     @commands.command(pass_context=True)
