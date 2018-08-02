@@ -16,17 +16,22 @@ Discord BOT AdminAFK will make life better for CS:GO Admins
 
 # Install guide
 
-1. Download –> https://github.com/lyon-esport/Discord-BOT-AdminAFK
+1. Download or clone –> https://github.com/lyon-esport/Discord-BOT-AdminAFK
 2. Extract the Discord-BOT-AdminAFK files
-3. Install pymysql library : pip install PyMySQL
-4. Install Discord.py library rewrite : pip install -U git+https://github.com/Rapptz/discord.py@rewrite#egg=discord.py[voice]
-5. Edit config.py with the good setting
-6. Create an application here : https://discordapp.com/developers/applications/
-7. Add your bot to your discord (replace 0000000 by your client_id): https://discordapp.com/oauth2/authorize?client_id=0000000&scope=bot&permissions=1
+3. Install the requirements: `pip install -r requirements.txt`
+4. Edit config.py with the good setting
+5. Create an application here : https://discordapp.com/developers/applications/
+6. Add your bot to your discord (replace 0000000 by your client_id): https://discordapp.com/oauth2/authorize?client_id=0000000&scope=bot&permissions=1
 
 # Usage guide
 
-* Run main.py
+## Run the bot
+
+You can start the bot with: `python main.py`
+
+It's recommanded to run the bot in a tmux terminal.
+
+## Commands
 * !help - List of available commands
 
 **ADMIN commands**
