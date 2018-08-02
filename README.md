@@ -21,7 +21,8 @@ Discord BOT AdminAFK will make life better for CS:GO Admins
 3. Install the requirements: `pip install -r requirements.txt`
 4. Edit config.py with the good setting
 5. Create an application here : https://discordapp.com/developers/applications/
-6. Add your bot to your discord (replace 0000000 by your client_id): https://discordapp.com/oauth2/authorize?client_id=0000000&scope=bot&permissions=1
+6. Set the bot as a bot user. This will give you the token.
+7. Add your bot to your discord (replace 0000000 by your client_id): https://discordapp.com/oauth2/authorize?client_id=0000000&scope=bot&permissions=1
 
 # Usage guide
 
