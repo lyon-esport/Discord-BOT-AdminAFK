@@ -55,7 +55,7 @@ List of available commands :'''
 
 # this specifies what extensions to load when the bot starts up
 startup_extensions = [
-    "extensions.CSGOUser",  # CSGO commands (round, flip...)
+    "extensions.CSGO_user",  # CSGO commands (round, flip...)
     "extensions.admin",      # Admin commands (mute, unmute...)
     "extensions.handler_event"
 ]
@@ -95,6 +95,6 @@ if __name__ == "__main__":
             bot.load_extension(extension)
         except Exception as e:
             exc = '{}: {}'.format(type(e).__name__, e)
-            print(_("Can't load extension: {}").format(extension, exc))
+            logger.error("Can't load extension %s: %s", extension, exc)
 
 bot.run(config.TOKEN)

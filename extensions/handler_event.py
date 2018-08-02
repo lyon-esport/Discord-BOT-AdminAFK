@@ -41,10 +41,14 @@ import discord
 from config import config, static_var
 from functions import logs
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 class Log(object):
     def __init__(self, bot):
         self.bot = bot
+        logging.info("Log plugin loaded")
 
     async def on_member_unban(self, guild, user):
         """Event : user unbanned"""

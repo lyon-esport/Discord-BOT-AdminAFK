@@ -42,45 +42,55 @@ import discord
 from discord.ext import commands
 
 from config import config, static_var
-from functions import check_permissions, logs
+from functions import logs
 
 from gettext import gettext as _
+
+import logging
+
+from functions.check_permissions import is_command_enabled, is_admin
+
+logger = logging.getLogger(__name__)
 
 
 class Admin(object):
     def __init__(self, bot):
         self.bot = bot
+        logging.info("Admin function loaded")
 
     @commands.command(pass_context=True)
     async def maps(self, ctx, nb_round: int):
         """Générer de 1 à 7 rounds avec des cartes aléatoires"""
-        if static_var.status_commands['maps'] == "1":
-            if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE):
-                if nb_round < 8 and nb_round >0:
-                    maps = random.sample(static_var.mapool_csgo, nb_round)
-                    msg = '@here Les maps du tournois sont : ```'
-                    for i in range(nb_round):
-                        msg = msg + "Round {0} : {1}\n".format(i+1, maps[i])
-                    msg = msg + "```"
-                    await self.bot.get_channel(config.ANNOUNCEMENT).send(msg)
-                else:
-                    msg = 'Merci de sélectionner un nombre dans l\'interval [1;7]'
-                    emoji = "<:loudspeaker:473169555557187584>"
-                    embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id), static_var.hex_colors_codes['green'], ctx.message.author.name, ctx.message.author.avatar_url, "Action", "Command used", "Name", "!maps", "Arguments", "{0}".format(nb_round))
-                    await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
-            else:
-                msg = "{0.message.author.mention} cette commande est réservée aux admins".format(ctx)
+        if not is_command_enabled('maps'):
+            await ctx.send(_("{0.message.author.mention} this command is disabled").format(ctx))
+            return
+        if not is_admin(ctx, config.ADMIN_ROLE):
+            await ctx.send(_("{0.message.author.mention} this commands is restricted to the admins").format(ctx))
+            return
+
+        if 8 > nb_round > 0:
+            maps = random.sample(static_var.mapool_csgo, nb_round)
+            msg = '@here Les maps du tournois sont : ```'
+            for i in range(nb_round):
+                msg = msg + "Round {0} : {1}\n".format(i + 1, maps[i])
+            msg = msg + "```"
+            await self.bot.get_channel(config.ANNOUNCEMENT).send(msg)
         else:
-            msg = "{0.message.author.mention} cette commande est désactivée".format(ctx)
+            msg = 'Merci de sélectionner un nombre dans l\'interval [1;7]'
+            embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id),
+                                    static_var.hex_colors_codes['green'], ctx.message.author.name,
+                                    ctx.message.author.avatar_url, "Action", "Command used", "Name", "!maps",
+                                    "Arguments", "{0}".format(nb_round))
+            await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
         await ctx.send(msg)
 
     @commands.command(pass_context=True)
     async def flipcoin(self, ctx, *users):
         """Faire un pile ou face (pile/face)"""
-        if not static_var.status_commands.get('flipcoin', False):
+        if not is_command_enabled('flipcoin'):
             await ctx.send(_("{0.message.author.mention} this command is disabled").format(ctx))
             return
-        if not check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE):
+        if not is_admin(ctx, config.ADMIN_ROLE):
             await ctx.send(_("{0.message.author.mention} this commands is restricted to the admins").format(ctx))
             return
 
@@ -93,167 +103,194 @@ class Admin(object):
 
         choice = random.choice(static_var.flipcoin)
         msg = msg + "-> {0}".format(choice)
-        embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id), static_var.hex_colors_codes['green'], ctx.message.author.name, ctx.message.author.avatar_url, "Action", "Command used", "Name", "!flipcoin", "Arguments", args)
+        embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id),
+                                static_var.hex_colors_codes['green'], ctx.message.author.name,
+                                ctx.message.author.avatar_url, "Action", "Command used", "Name", "!flipcoin",
+                                "Arguments", args)
         await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
         await ctx.send(msg)
 
     @commands.command(pass_context=True)
-    async def demo(self, ctx, demo_id :int, *user):
+    async def demo(self, ctx, demo_id: int, *user):
         """Générer un URL pour télécharger une démo"""
-        if static_var.status_commands['demo'] == "1":
-            if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE):
-                msg = ""
-                args = ""
-                if user:
-                    for each_user in user:
-                        msg = msg + "{0} ".format(each_user)
-                    args = msg
-                else:
-                    msg = "{0.message.author.mention} ".format(ctx)
-                link = '{0}matchs/demo/{1}'.format(config.URL_EBOT, demo_id)
-                msg = msg + "le lien de téléchargement est disponible ici -> {0} à partir de maintenant vous avez 10 minutes pour nous donner les ticks suspects (3 minimums) passé ce délai la demande sera automatiquement refusée".format(link)
-                await self.bot.get_channel(config.GOTV_CHANNEL).send(msg)
-                emoji = "<:loudspeaker:473169555557187584>"
-                embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id), static_var.hex_colors_codes['green'], ctx.message.author.name, ctx.message.author.avatar_url, "Action", "Command used", "Name", "!demo", "Arguments", args)
-                await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
-            else:
-                msg = "{0.message.author.mention} cette commande est réservée aux admins".format(ctx)
+        if not is_command_enabled('demo'):
+            await ctx.send(_("{0.message.author.mention} this command is disabled").format(ctx))
+            return
+        if not is_admin(ctx, config.ADMIN_ROLE):
+            await ctx.send(_("{0.message.author.mention} this commands is restricted to the admins").format(ctx))
+            return
+
+        msg = ""
+        args = ""
+        if user:
+            for each_user in user:
+                msg = msg + "{0} ".format(each_user)
+            args = msg
         else:
-            msg = "{0.message.author.mention} cette commande est désactivée".format(ctx)
+            msg = "{0.message.author.mention} ".format(ctx)
+        link = '{0}matchs/demo/{1}'.format(config.URL_EBOT, demo_id)
+        msg = msg + "le lien de téléchargement est disponible ici -> {0} à partir de maintenant vous avez 10 minutes pour nous donner les ticks suspects (3 minimums) passé ce délai la demande sera automatiquement refusée".format(
+            link)
+        await self.bot.get_channel(config.GOTV_CHANNEL).send(msg)
+        embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id),
+                                static_var.hex_colors_codes['green'], ctx.message.author.name,
+                                ctx.message.author.avatar_url, "Action", "Command used", "Name", "!demo", "Arguments",
+                                args)
+        await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
         await ctx.send(msg)
 
     @commands.command(pass_context=True)
-    async def enable(self, ctx, command :str):
+    async def enable(self, ctx, command: str):
         """Activer une commande"""
-        if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE):
-            if command in static_var.status_commands:
-                static_var.status_commands[command] = "1"
-                msg = '{0.message.author.mention} -> La commande !{1} a été activée'.format(ctx, command)
-            else:
-                msg= '{0.message.author.mention} -> La commande !{1} n\'existe pas'.format(ctx, command)
-            emoji = "<:loudspeaker:473169555557187584>"
-            embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id), static_var.hex_colors_codes['green'], ctx.message.author.name, ctx.message.author.avatar_url, "Action", "Command used", "Name", "!enable", "Argument", command)
-            await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
+        if not is_admin(ctx, config.ADMIN_ROLE):
+            await ctx.send("{0.message.author.mention} cette commande est réservée aux admins".format(ctx))
+            return
+
+        if command in static_var.status_commands:
+            static_var.status_commands[command] = "1"
+            msg = '{0.message.author.mention} -> La commande !{1} a été activée'.format(ctx, command)
         else:
-            msg = "{0.message.author.mention} cette commande est réservée aux admins".format(ctx)
+            msg = '{0.message.author.mention} -> La commande !{1} n\'existe pas'.format(ctx, command)
+        embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id),
+                                static_var.hex_colors_codes['green'], ctx.message.author.name,
+                                ctx.message.author.avatar_url, "Action", "Command used", "Name", "!enable", "Argument",
+                                command)
+        await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
         await ctx.send(msg)
 
     @commands.command(pass_context=True)
-    async def disable(self, ctx, command :str):
+    async def disable(self, ctx, command: str):
         """Désactiver une commande"""
-        if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE):
-            if command in static_var.status_commands:
-                static_var.status_commands[command] = "0"
-                msg = '{0.message.author.mention} -> La commande !{1} a été désactivée'.format(ctx, command)
-            else:
-                msg= '{0.message.author.mention} -> La commande !{1} n\'existe pas'.format(ctx, command)
-            emoji = "<:loudspeaker:473169555557187584>"
-            embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id), static_var.hex_colors_codes['green'], ctx.message.author.name, ctx.message.author.avatar_url, "Action", "Command used", "Name", "!disable", "Argument", command)
-            await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
+        if not is_admin(ctx, config.ADMIN_ROLE):
+            await ctx.send("{0.message.author.mention} cette commande est réservée aux admins".format(ctx))
+            return
+
+        if command in static_var.status_commands:
+            static_var.status_commands[command] = "0"
+            msg = '{0.message.author.mention} -> La commande !{1} a été désactivée'.format(ctx, command)
         else:
-            msg = "{0.message.author.mention} cette commande est réservée aux admins".format(ctx)
+            msg = '{0.message.author.mention} -> La commande !{1} n\'existe pas'.format(ctx, command)
+        embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id),
+                                static_var.hex_colors_codes['green'], ctx.message.author.name,
+                                ctx.message.author.avatar_url, "Action", "Command used", "Name", "!disable", "Argument",
+                                command)
+        await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
         await ctx.send(msg)
 
     @commands.command(pass_context=True)
-    async def status(self, ctx, command :str):
+    async def status(self, ctx, command: str):
         """Status d'une commande"""
-        if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE):
-            if command == 'enable' or command == 'disable' or command == 'status':
-                msg = '{0.message.author.mention} -> La commande !enable, !disable et !status sont toujours activées'.format(ctx)
-            else:
-                try:
-                    if static_var.status_commands[command] == "0":
-                        msg = '{0.message.author.mention} -> La commande !{1} est désactivée'.format(ctx, command)
-                    elif static_var.status_commands[command] == "1":
-                        msg = '{0.message.author.mention} -> La commande !{1} est activée'.format(ctx, command)
-                except KeyError:
-                    msg = '{0.message.author.mention} -> La commande !{1} n\'existe pas'.format(ctx, command)
-            emoji = "<:loudspeaker:473169555557187584>"
-            embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id), static_var.hex_colors_codes['green'], ctx.message.author.name, ctx.message.author.avatar_url, "Action", "Command used", "Name", "!status", "Argument", command)
-            await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
+        if not is_admin(ctx, config.ADMIN_ROLE):
+            await ctx.send("{0.message.author.mention} cette commande est réservée aux admins".format(ctx))
+            return
+
+        if command in ['enable', 'disable', 'status']:
+            msg = '{0.message.author.mention} -> La commande !enable, !disable et !status sont toujours activées'.format(ctx)
         else:
-            msg = "{0.message.author.mention} cette commande est réservée aux admins".format(ctx)
+            if not command in static_var.status_commands:
+                msg = _("{0.message.author.mention} -> Command !{1} doesn't exists").format(ctx, command)
+            else:
+                if is_command_enabled(command):
+                    msg = _('{0.message.author.mention} -> Command !{1} is active').format(ctx, command)
+                else:
+                    msg = _('{0.message.author.mention} -> Command !{1} is disabled').format(ctx, command)
+
+        embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id),
+                                static_var.hex_colors_codes['green'], ctx.message.author.name,
+                                ctx.message.author.avatar_url, "Action", "Command used", "Name", "!status", "Argument",
+                                command)
+        await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
         await ctx.send(msg)
 
     @commands.command(pass_context=True)
-    async def purge(self, ctx, number :int):
+    async def purge(self, ctx, number: int):
         """Supprimer des messages"""
-        if static_var.status_commands['purge'] == "1":
-            if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE):
-                if number < 100 and number > 1:
-                    await ctx.channel.purge(limit=int(number+1))
-                else:
-                    msg = "{0.message.author.mention} -> AdminAFK ne peut supprimer que des messages dans un intervalle [2, 99]".format(ctx)
-                    await ctx.send(msg)
-                emoji = "<:loudspeaker:473169555557187584>"
-                embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id), static_var.hex_colors_codes['green'], ctx.message.author.name, ctx.message.author.avatar_url, "Action", "Command used", "Name", "!purge", "Argument", "{0}".format(number))
-                await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
-            else:
-                msg = "{0.message.author.mention} cette commande est réservée aux admins".format(ctx)
-                await ctx.send(msg)
+        if not is_command_enabled('purge', ):
+            await ctx.send(_("{0.message.author.mention} this command is disabled").format(ctx))
+            return
+        if not is_admin(ctx, config.ADMIN_ROLE):
+            await ctx.send(_("{0.message.author.mention} this commands is restricted to the admins").format(ctx))
+            return
+
+        if 100 > number > 1:
+            await ctx.channel.purge(limit=int(number + 1))
         else:
-            msg = "{0.message.author.mention} cette commande est désactivée".format(ctx)
+            msg = "{0.message.author.mention} -> AdminAFK ne peut supprimer que des messages dans un intervalle [2, 99]".format(
+                ctx)
             await ctx.send(msg)
+        embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id),
+                                static_var.hex_colors_codes['green'], ctx.message.author.name,
+                                ctx.message.author.avatar_url, "Action", "Command used", "Name", "!purge", "Argument",
+                                "{0}".format(number))
+        await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
 
     @commands.command(pass_context=True)
     async def ping(self, ctx):
         """Permet de tester la connectivité du bot"""
-        if static_var.status_commands['ping'] == "1":
-            if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE):
-                channel = ctx.message.channel
-                t1 = time.perf_counter()
-                async with ctx.typing():
-                    pass
-                t2 = time.perf_counter()
-                msg = 'Pong: {}ms !'.format(round((t2-t1)*1000))
-                emoji = "<:loudspeaker:473169555557187584>"
-                embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id), static_var.hex_colors_codes['green'], ctx.message.author.name, ctx.message.author.avatar_url, "Action", "Command used", "Name", "!ping", "", "")
-                await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
-            else:
-                msg = "{0.message.author.mention} cette commande est réservée aux admins".format(ctx)
-        else:
-            msg = "{0.message.author.mention} cette commande est désactivée".format(ctx)
+        if not is_command_enabled('ping', ):
+            await ctx.send(_("{0.message.author.mention} this command is disabled").format(ctx))
+            return
+        if not is_admin(ctx, config.ADMIN_ROLE):
+            await ctx.send(_("{0.message.author.mention} this commands is restricted to the admins").format(ctx))
+            return
+
+        t1 = time.perf_counter()
+        async with ctx.typing():
+            pass
+        t2 = time.perf_counter()
+        msg = 'Pong: {}ms !'.format(round((t2 - t1) * 1000))
+        embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id),
+                                static_var.hex_colors_codes['green'], ctx.message.author.name,
+                                ctx.message.author.avatar_url, "Action", "Command used", "Name", "!ping", "", "")
+        await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
         await ctx.send(msg)
 
     @commands.command(pass_context=True)
     async def mute(self, ctx, member):
         """Permet de muter un utilisateur"""
-        if static_var.status_commands['mute'] == "1":
-            if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE):
-                role = discord.utils.get(member.guild.roles, name=config.MUTED_ROLE)
-                if role in member.roles:
-                    msg="{0.mention} est déjà muté !".format(member)
-                else:
-                    await member.add_roles(role)
-                    msg="{0.mention} a été muté par {1.message.author.mention} !".format(member, ctx)
-                emoji = "<:loudspeaker:473169555557187584>"
-                embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id), static_var.hex_colors_codes['green'], ctx.message.author.name, ctx.message.author.avatar_url, "Action", "Command used", "Name", "!mute", "Arguments", member.mention)
-                await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
-            else:
-                msg = "{0.message.author.mention} cette commande est réservée aux admins".format(ctx)
+        if not is_command_enabled('mute', ):
+            await ctx.send(_("{0.message.author.mention} this command is disabled").format(ctx))
+            return
+        if not is_admin(ctx, config.ADMIN_ROLE):
+            await ctx.send(_("{0.message.author.mention} this commands is restricted to the admins").format(ctx))
+            return
+
+        role = discord.utils.get(member.guild.roles, name=config.MUTED_ROLE)
+        if role in member.roles:
+            msg = "{0.mention} est déjà muté !".format(member)
         else:
-            msg = "{0.message.author.mention} cette commande est désactivée".format(ctx)
+            await member.add_roles(role)
+            msg = "{0.mention} a été muté par {1.message.author.mention} !".format(member, ctx)
+        embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id),
+                                static_var.hex_colors_codes['green'], ctx.message.author.name,
+                                ctx.message.author.avatar_url, "Action", "Command used", "Name", "!mute", "Arguments",
+                                member.mention)
+        await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
         await ctx.send(msg)
 
     @commands.command(pass_context=True)
     async def unmute(self, ctx, member):
         """Permet de unmuter un utilisateur"""
-        if static_var.status_commands['unmute'] == "1":
-            if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE):
-                role = discord.utils.get(member.guild.roles, name=config.MUTED_ROLE)
-                if role in member.roles:
-                    await member.remove_roles(role)
-                    msg="{0.mention} a été démuté par {1.message.author.mention} !".format(member, ctx)
-                else:
-                    msg="{0.mention} n'était pas muté !".format(member)
-                emoji = "<:loudspeaker:473169555557187584>"
-                embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id), static_var.hex_colors_codes['green'], ctx.message.author.name, ctx.message.author.avatar_url, "Action", "Command used", "Name", "!unmute", "Arguments", member.mention)
-                await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
-            else:
-                msg = "{0.message.author.mention} cette commande est réservée aux admins".format(ctx)
+        if not is_command_enabled('unmute', ):
+            await ctx.send(_("{0.message.author.mention} this command is disabled").format(ctx))
+            return
+        if not is_admin(ctx, config.ADMIN_ROLE):
+            await ctx.send(_("{0.message.author.mention} this commands is restricted to the admins").format(ctx))
+            return
+
+        role = discord.utils.get(member.guild.roles, name=config.MUTED_ROLE)
+        if role in member.roles:
+            await member.remove_roles(role)
+            msg = "{0.mention} a été démuté par {1.message.author.mention} !".format(member, ctx)
         else:
-            msg = "{0.message.author.mention} cette commande est désactivée".format(ctx)
+            msg = "{0.mention} n'était pas muté !".format(member)
+        embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id),
+                                static_var.hex_colors_codes['green'], ctx.message.author.name,
+                                ctx.message.author.avatar_url, "Action", "Command used", "Name", "!unmute", "Arguments",
+                                member.mention)
+        await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
         await ctx.send(msg)
+
 
 def setup(bot):
     bot.add_cog(Admin(bot))

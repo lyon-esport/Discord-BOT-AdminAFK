@@ -35,10 +35,21 @@
 # termes.
 # ----------------------------------------------------------------------------
 
-#Hex Colors Codes
-hex_colors_codes = {"black": 0x000000, "white": 0xffffff, "red": 0xd40c00, "blue": 0x526eff, "green": 0x32c12c, "yellow": 0xffef00, "orange": 0xff9a00 , "brown": 0x7c5547 , "purple": 0x682cbf , "grey": 0x9e9e9e}
+# Hex Colors Codes
+hex_colors_codes = {
+    "black": 0x000000,
+    "white": 0xffffff,
+    "red": 0xd40c00,
+    "blue": 0x526eff,
+    "green": 0x32c12c,
+    "yellow": 0xffef00,
+    "orange": 0xff9a00,
+    "brown": 0x7c5547,
+    "purple": 0x682cbf,
+    "grey": 0x9e9e9e
+}
 
-#Status of commands (0 = disable, 1 = enable)
+# Status of commands (0 = disable, 1 = enable)
 status_commands = {
     "matchs": True,
     "connect": True,
@@ -57,11 +68,13 @@ status_commands = {
     "unmute": True
 }
 
-#State of flipcoins
+# State of flipcoins
 flipcoin = ["face", "pile"]
 
-#eBot status
-ebot_status = ["not started", "starting", "warmup knife round", "knife round", "end of the knife round", "warmup 1st side", "first side", "warmup 2nd side", "econd side", "warmup overtime", "first side OT", "warmup 2nd side OT", "second side OT", "finished", "archived"]
+# eBot status
+ebot_status = ["not started", "starting", "warmup knife round", "knife round", "end of the knife round",
+               "warmup 1st side", "first side", "warmup 2nd side", "econd side", "warmup overtime", "first side OT",
+               "warmup 2nd side OT", "second side OT", "finished", "archived"]
 
-#Active Duty Map Pool csgo
+# Active Duty Map Pool csgo
 mapool_csgo = ["de_dust2", "de_cache", "de_inferno", "de_train", "de_overpass", "de_mirage", "de_nuke"]
