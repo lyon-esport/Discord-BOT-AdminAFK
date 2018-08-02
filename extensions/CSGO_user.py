@@ -63,7 +63,7 @@ class CSGO_user():
             result = bdd.db_select()
             bdd.db_disconnect()
             matchs = []
-            status = "";
+            status = ""
             for row in result:
                 if int(row['status']) > 1 and int(row['status']) < 13:
                     matchs.append(row)
@@ -245,6 +245,7 @@ class CSGO_user():
         else:
             msg = "{0.message.author.mention} cette commande est désactivée".format(ctx)
         await ctx.send(msg)
+
 
 def setup(bot):
     bot.add_cog(CSGO_user(bot))

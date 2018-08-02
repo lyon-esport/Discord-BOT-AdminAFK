@@ -38,6 +38,7 @@ import discord
 from discord.ext import commands
 import datetime
 
+
 def create_log(bot_avatar_url, title, description, colour, member_name, member_icon, field_name, field_value, field_name2, field_value2, field_name3, field_value3):
     now = datetime.datetime.now().strftime('%a %b %d, %Y at %H:%M %p')
     embed = discord.Embed(title=title, description=description, colour=colour)

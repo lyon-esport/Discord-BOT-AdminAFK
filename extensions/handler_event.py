@@ -42,7 +42,7 @@ from config import config, static_var
 from functions import logs
 
 
-class Log():
+class Log(object):
     def __init__(self, bot):
         self.bot = bot
 
@@ -255,6 +255,7 @@ class Log():
         emoji = "<:warning:472139637142323231>"
         embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(message.author.id), static_var.hex_colors_codes['red'], message.author.name, message.author.avatar_url, "Action", "{0} Message deleted".format(emoji), "Message information", "Message sent by {0} deleted in {1}".format(message.author.mention, message.channel.mention), "Content", content)
         await self.bot.get_channel(config.GENERAL_LOGS).send(embed=embed)
+
 
 def setup(bot):
     bot.add_cog(Log(bot))
