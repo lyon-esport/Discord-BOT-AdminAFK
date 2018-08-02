@@ -35,11 +35,17 @@
 # termes.
 # ----------------------------------------------------------------------------
 
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 import discord
 from discord.ext import commands
 
 import config
 from functions import check_permissions
+from gettext import gettext as _
 
 description = '''Discord BOT AdminAFK is published under license CeCILL v2.1
 Copyright © Lyon e-Sport 2018
@@ -60,30 +66,27 @@ bot = commands.Bot(command_prefix='!', description=description)
 @bot.event
 async def on_ready():
     await bot.change_presence(activity=discord.Game(name='AdminAFK by -MoNsTeRRR', type=0))
-    print('Logged in as')
-    print(bot.user.name)
-    print(bot.user.id)
-    print('------')
+    logger.info("Logged as: %s (%s)", bot.user.name, bot.user.id)
 
 
 @bot.command(hidden=True)
 @commands.check(check_permissions.check_if_it_is_bot)
-async def load(extension_name : str):
+async def load(extension_name: str):
     """Charger une extension."""
     try:
         bot.load_extension(extension_name)
     except (AttributeError, ImportError) as e:
         await bot.say("```py\n{}: {}\n```".format(type(e).__name__, str(e)))
         return
-    await bot.say("{} chargée.".format(extension_name))
+    await bot.say(_("{} loaded.").format(extension_name))
 
 
 @bot.command(hidden=True)
 @commands.check(check_permissions.check_if_it_is_bot)
-async def unload(extension_name : str):
+async def unload(extension_name: str):
     """Retirer une extension"""
     bot.unload_extension(extension_name)
-    await bot.say("{} retirée.".format(extension_name))
+    await bot.say(_("{} removed.").format(extension_name))
 
 
 if __name__ == "__main__":
@@ -92,6 +95,6 @@ if __name__ == "__main__":
             bot.load_extension(extension)
         except Exception as e:
             exc = '{}: {}'.format(type(e).__name__, e)
-            print('L\'extension {} n\a pas pu être chargée\n{}'.format(extension, exc))
+            print(_("Can't load extension: {}").format(extension, exc))
 
 bot.run(config.TOKEN)
