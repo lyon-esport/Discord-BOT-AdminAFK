@@ -37,27 +37,61 @@
 
 import pymysql
 
+import logging
+logger = logging.getLogger(__name__)
+
+
 def db_connect(hostname, port, dbname, username, password):
     global connection
-    connection = pymysql.connect(host=hostname,
-                             port=int(port),
-                             user=username,
-                             password=password,
-                             db=dbname,
-                             charset='utf8',
-                             autocommit=True,
-                             cursorclass=pymysql.cursors.DictCursor)
+    connection = pymysql.connect(
+        host=hostname,
+        port=int(port),
+        user=username,
+        password=password,
+        db=dbname,
+        charset='utf8',
+        autocommit=True,
+        cursorclass=pymysql.cursors.DictCursor
+    )
+
+
 def db_select():
-    sql = "SELECT matchs.id, matchs.team_a_name, matchs.team_b_name, matchs.score_a, matchs.score_b, ta.name AS teama_name, tb.name AS teamb_name, matchs.status, matchs.enable FROM matchs LEFT JOIN maps ON maps.match_id = matchs.id LEFT JOIN teams AS ta ON ta.id = team_a LEFT JOIN teams AS tb ON tb.id = team_b"
+    sql = """"
+    SELECT
+        matchs.id,
+        matchs.team_a_name,
+        matchs.team_b_name,
+        matchs.score_a,
+        matchs.score_b,
+        ta.name AS teama_name,
+        tb.name AS teamb_name,
+        matchs.status,
+        matchs.enable
+    FROM
+        matchs
+    LEFT JOIN
+        maps
+    ON
+        maps.match_id = matchs.id
+    LEFT JOIN
+        teams AS ta
+    ON
+        ta.id = team_a
+    LEFT JOIN
+        teams AS tb
+    ON
+        tb.id = team_b
+    """
     try:
         with connection.cursor() as cursor:
             cursor.execute(sql)
             return cursor.fetchall()
     except pymysql.err.InternalError as e:
         code, msg = e.args
-        print("Code : " + code + ", erreur : " + msg)
-    except:
-        print("Erreur")
+        logger.error("Problem during query, code: %s error: %s", code, msg)
+    except Exception as e:
+        logger.error("Problem during query: %s", e)
+
 
 def db_disconnect():
     connection.close()
