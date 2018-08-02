@@ -35,20 +35,15 @@
 # termes.
 # ----------------------------------------------------------------------------
 
-import sys
-import discord
-from discord.ext import commands
 import random
 import time
 
-sys.path.append('../')
-sys.path.append('../config/')
-sys.path.append('../functions/')
+import discord
+from discord.ext import commands
 
-import config
-import static_var
-import check_permissions
-import logs
+from config import config, static_var
+from functions import check_permissions, logs
+
 
 class Admin():
 

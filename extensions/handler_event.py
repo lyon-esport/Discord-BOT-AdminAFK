@@ -34,17 +34,13 @@
 # pris connaissance de la licence CeCILL, et que vous en avez accepté les
 # termes.
 # ----------------------------------------------------------------------------
-import sys
-import discord
-from discord.ext import commands
 import asyncio
 
-sys.path.append('../config/')
-sys.path.append('../functions/')
+import discord
 
-import config
-import static_var
-import logs
+from config import config, static_var
+from functions import logs
+
 
 class Log():
     def __init__(self, bot):

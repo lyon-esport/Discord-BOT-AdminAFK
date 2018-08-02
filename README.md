@@ -70,4 +70,4 @@ Copyright © Lyon e-Sport, 2018
 
 Contributor(s):
 
--Ortega Ludovic - ludovic.ortega@lyon-esport.fr
+* Ortega Ludovic - ludovic.ortega@lyon-esport.fr

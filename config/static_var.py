@@ -35,62 +35,33 @@
 # termes.
 # ----------------------------------------------------------------------------
 
-import sys
-import discord
-from discord.ext import commands
+#Hex Colors Codes
+hex_colors_codes = {"black": 0x000000, "white": 0xffffff, "red": 0xd40c00, "blue": 0x526eff, "green": 0x32c12c, "yellow": 0xffef00, "orange": 0xff9a00 , "brown": 0x7c5547 , "purple": 0x682cbf , "grey": 0x9e9e9e}
 
-sys.path.append('config/')
-sys.path.append('class/')
-sys.path.append('functions/')
-sys.path.append('bdd/')
-sys.path.append('event/')
+#Status of commands (0 = disable, 1 = enable)
+status_commands = {
+    "matchs": True,
+    "connect": True,
+    "bracket": True,
+    "participants": True,
+    "flipcoin": True,
+    "report": True,
+    "maps": True,
+    "purge": True,
+    "rules": True,
+    "ebot": True,
+    "demo": True,
+    "gotv": True,
+    "ping": True,
+    "mute": True,
+    "unmute": True
+}
 
-import config
-import check_permissions
+#State of flipcoins
+flipcoin = ["face", "pile"]
 
-description = '''Discord BOT AdminAFK is published under license CeCILL v2.1
-Copyright © Lyon e-Sport 2018
-by Ludovic « -MoNsTeRRR » Ortega
+#eBot status
+ebot_status = ["not started", "starting", "warmup knife round", "knife round", "end of the knife round", "warmup 1st side", "first side", "warmup 2nd side", "econd side", "warmup overtime", "first side OT", "warmup 2nd side OT", "second side OT", "finished", "archived"]
 
-List of available commands :'''
-
-# this specifies what extensions to load when the bot starts up
-startup_extensions = ["CSGO_user", "admin", "handler_event"]
-
-bot = commands.Bot(command_prefix='!', description=description)
-
-@bot.event
-async def on_ready():
-    await bot.change_presence(activity=discord.Game(name='AdminAFK by -MoNsTeRRR', type=0))
-    print('Logged in as')
-    print(bot.user.name)
-    print(bot.user.id)
-    print('------')
-
-@bot.command(hidden=True)
-@commands.check(check_permissions.check_if_it_is_bot)
-async def load(extension_name : str):
-    """Charger une extension."""
-    try:
-        bot.load_extension(extension_name)
-    except (AttributeError, ImportError) as e:
-        await bot.say("```py\n{}: {}\n```".format(type(e).__name__, str(e)))
-        return
-    await bot.say("{} chargée.".format(extension_name))
-
-@bot.command(hidden=True)
-@commands.check(check_permissions.check_if_it_is_bot)
-async def unload(extension_name : str):
-    """Retirer une extension"""
-    bot.unload_extension(extension_name)
-    await bot.say("{} retirée.".format(extension_name))
-
-if __name__ == "__main__":
-    for extension in startup_extensions:
-        try:
-            bot.load_extension(extension)
-        except Exception as e:
-            exc = '{}: {}'.format(type(e).__name__, e)
-            print('L\'extension {} n\a pas pu être chargée\n{}'.format(extension, exc))
-
-bot.run(config.TOKEN)
+#Active Duty Map Pool csgo
+mapool_csgo = ["de_dust2", "de_cache", "de_inferno", "de_train", "de_overpass", "de_mirage", "de_nuke"]

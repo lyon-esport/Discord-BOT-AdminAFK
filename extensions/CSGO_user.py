@@ -35,20 +35,12 @@
 # termes.
 # ----------------------------------------------------------------------------
 
-import sys
-import discord
 from discord.ext import commands
 
-sys.path.append('../')
-sys.path.append('../config/')
-sys.path.append('../bdd/')
-sys.path.append('../functions/')
+from bdd import bdd
+from config import static_var, config
+from functions import check_permissions, logs
 
-import config
-import static_var
-import bdd
-import check_permissions
-import logs
 
 class CSGO_user():
 
@@ -57,7 +49,7 @@ class CSGO_user():
 
     @commands.command(pass_context=True)
     async def matchs(self, ctx, *user):
-        """Get info about matches on eBot"""
+        """Avoir des informations sur les matchs en cours"""
         if static_var.status_commands['matchs'] == "1":
             msg = ""
             args = ""
@@ -76,9 +68,9 @@ class CSGO_user():
                 if int(row['status']) > 1 and int(row['status']) < 13:
                     matchs.append(row)
             if not matchs:
-                msg = msg + "-> There are no games in progress"
+                msg = msg + "-> Il n'y a aucun match en cours"
             else:
-                msg = msg + "-> Live matches : ```"
+                msg = msg + "-> Matchs en cours : ```"
                 for each_match in matchs:
                     if int(each_match['enable']) == 0:
                          status = "Stop"
@@ -104,12 +96,12 @@ class CSGO_user():
             embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id), static_var.hex_colors_codes['green'], ctx.message.author.name, ctx.message.author.avatar_url, "Action", "Command used", "Name", "!matchs", "Arguments", args)
             await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
         else:
-            msg = "{0.message.author.mention} this command is disabled".format(ctx)
+            msg = "{0.message.author.mention} cette commande est désactivée".format(ctx)
         await ctx.send(msg)
 
     @commands.command(pass_context=True)
     async def connect(self, ctx, *user):
-        """Get the link of connect team"""
+        """Lien pour avoir le connect des matchs"""
         if static_var.status_commands['connect'] == "1":
             msg = ""
             args = ""
@@ -120,17 +112,17 @@ class CSGO_user():
                 args = msg
             else:
                 msg = "{0.message.author.mention} ".format(ctx)
-            msg = msg + "-> Link of connect team  : {0}".format(link)
+            msg = msg + "-> Lien des connects des matchs : {0}".format(link)
             emoji = "<:loudspeaker:473169555557187584>"
             embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id), static_var.hex_colors_codes['green'], ctx.message.author.name, ctx.message.author.avatar_url, "Action", "Command used", "Name", "!connect", "Arguments", args)
             await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
         else:
-            msg = "{0.message.author.mention} this command is disabled".format(ctx)
+            msg = "{0.message.author.mention} cette commande est désactivée".format(ctx)
         await ctx.send(msg)
 
     @commands.command(pass_context=True)
     async def bracket(self, ctx, *user):
-        """Get the link of bracket"""
+        """Lien du bracket"""
         if static_var.status_commands['bracket'] == "1":
             msg = ""
             args = ""
@@ -141,17 +133,17 @@ class CSGO_user():
                 args = msg
             else:
                 msg = "{0.message.author.mention} ".format(ctx)
-            msg = msg + "-> Link of bracket : {0}".format(link)
+            msg = msg + "-> Lien du bracket : {0}".format(link)
             emoji = "<:loudspeaker:473169555557187584>"
             embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id), static_var.hex_colors_codes['green'], ctx.message.author.name, ctx.message.author.avatar_url, "Action", "Command used", "Name", "!bracket", "Arguments", args)
             await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
         else:
-            msg = "{0.message.author.mention} this command is disabled".format(ctx)
+            msg = "{0.message.author.mention} cette commande est désactivée".format(ctx)
         await ctx.send(msg)
 
     @commands.command(pass_context=True)
     async def participants(self, ctx, *user):
-        """Get the link of participants"""
+        """Lien des participants"""
         if static_var.status_commands['participants'] == "1":
             msg = ""
             args = ""
@@ -162,17 +154,17 @@ class CSGO_user():
                 args = msg
             else:
                 msg = "{0.message.author.mention} ".format(ctx)
-            msg = msg + "-> Link of participants  : {0}".format(link)
+            msg = msg + "-> Lien des participants : {0}".format(link)
             emoji = "<:loudspeaker:473169555557187584>"
             embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id), static_var.hex_colors_codes['green'], ctx.message.author.name, ctx.message.author.avatar_url, "Action", "Command used", "Name", "!participants", "Arguments", args)
             await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
         else:
-            msg = "{0.message.author.mention} this command is disabled".format(ctx)
+            msg = "{0.message.author.mention} cette commande est désactivée".format(ctx)
         await ctx.send(msg)
 
     @commands.command(pass_context=True)
     async def report(self, ctx, *user):
-        """Get infos for report a player/team"""
+        """Avoir des informations pour reporter un(e) joueur/équipe"""
         if static_var.status_commands['report'] == "1":
             msg = ""
             args = ""
@@ -183,18 +175,18 @@ class CSGO_user():
                 args = msg
             else:
                 msg = msg + "{0.message.author.mention} ".format(ctx)
-            msg = msg + " reply here for make a dispute with the name of your team and the opposant team. Admin Team will give you a link for download the GOTV after that you will have 10 minutes to found ticks (3 minimums).".format(link)
+            msg = msg + " pour faire une demande de gotv vous devez spécifier le match incriminé ainsi que potentiellement les joueurs incriminés. Suite à cela nous vous donnerons un lien que vous devrez regarder et trouver les ticks que vous trouvez suspects (3 minimums)".format(link)
             await self.bot.get_channel(config.GOTV_CHANNEL).send(msg)
             emoji = "<:loudspeaker:473169555557187584>"
             embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id), static_var.hex_colors_codes['green'], ctx.message.author.name, ctx.message.author.avatar_url, "Action", "Command used", "Name", "!report", "Arguments", args)
             await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
         else:
-            msg = "{0.message.author.mention} this command is disabled".format(ctx)
+            msg = "{0.message.author.mention} cette commande est désactivée".format(ctx)
             await ctx.send(msg)
 
     @commands.command(pass_context=True)
     async def rules(self, ctx, *user):
-        """Get the link of rules"""
+        """Lien du règlement"""
         if static_var.status_commands['rules'] == "1":
             msg = ""
             args = ""
@@ -205,17 +197,17 @@ class CSGO_user():
                 args = msg
             else:
                 msg = "{0.message.author.mention} ".format(ctx)
-            msg = msg + "-> Link of rules : {0}".format(link)
+            msg = msg + "-> Lien du règlement : {0}".format(link)
             emoji = "<:loudspeaker:473169555557187584>"
             embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id), static_var.hex_colors_codes['green'], ctx.message.author.name, ctx.message.author.avatar_url, "Action", "Command used", "Name", "!rules", "Arguments", args)
             await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
         else:
-            msg = "{0.message.author.mention} this command is disabled".format(ctx)
+            msg = "{0.message.author.mention} cette commande est désactivée".format(ctx)
         await ctx.send(msg)
 
     @commands.command(pass_context=True)
     async def ebot(self, ctx, *user):
-        """Get the link of eBot"""
+        """Lien de l'eBot"""
         if static_var.status_commands['ebot'] == "1":
             msg = ""
             args = ""
@@ -226,17 +218,17 @@ class CSGO_user():
                 args = msg
             else:
                 msg = "{0.message.author.mention} ".format(ctx)
-            msg = msg + "-> Link of eBot : {0}".format(link)
+            msg = msg + "-> Lien de l'eBot : {0}".format(link)
             emoji = "<:loudspeaker:473169555557187584>"
             embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id), static_var.hex_colors_codes['green'], ctx.message.author.name, ctx.message.author.avatar_url, "Action", "Command used", "Name", "!ebot", "Arguments", args)
             await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
         else:
-            msg = "{0.message.author.mention} this command is disabled".format(ctx)
+            msg = "{0.message.author.mention} cette commande est désactivée".format(ctx)
         await ctx.send(msg)
 
     @commands.command(pass_context=True)
     async def gotv(self, ctx, *user):
-        """How to watch a demo ?"""
+        """Comment regarder une démo ?"""
         if static_var.status_commands['gotv'] == "1":
             msg = ""
             args = ""
@@ -246,12 +238,12 @@ class CSGO_user():
                 args = msg
             else:
                 msg = "{0.message.author.mention} ".format(ctx)
-            msg = msg + "To watch a demo :\n 1)Download the démo\n 2)Unzip the demo with winrar for example\n 3)Move the file <nom>.dem in a folder without accent for example on the desktop\n 4)Start CS:GO\n 5)Press simultaneously `Shift` and `F2`\n 6)Press Load...\n 7)Select the file <nom>.dem\n 8)The game will launch the demo"
+            msg = msg + "Pour regarder une démo :\n 1)Télécharge la démo\n 2)Dézippe la démo grâce à winrar par exemple\n 3)Dépose le fichier <nom>.dem dans un dossier sans accent par exemple ton bureau\n 4)Lance CS:GO\n 5)Appuye simultanément sur `Shift` et `F2`\n 6)Appuye sur Load...\n 7)Sélectionne le fichier <nom>.dem\n 8)Le jeu va lancer la démo"
             emoji = "<:loudspeaker:473169555557187584>"
             embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id), static_var.hex_colors_codes['green'], ctx.message.author.name, ctx.message.author.avatar_url, "Action", "Command used", "Name", "!gotv", "Arguments", args)
             await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
         else:
-            msg = "{0.message.author.mention} this command is disabled".format(ctx)
+            msg = "{0.message.author.mention} cette commande est désactivée".format(ctx)
         await ctx.send(msg)
 
 def setup(bot):
