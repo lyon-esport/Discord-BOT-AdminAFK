@@ -52,7 +52,7 @@ class Admin(object):
         self.bot = bot
 
     @commands.command(pass_context=True)
-    async def maps(self, ctx, nb_round :int):
+    async def maps(self, ctx, nb_round: int):
         """Générer de 1 à 7 rounds avec des cartes aléatoires"""
         if static_var.status_commands['maps'] == "1":
             if check_permissions.check_if_it_is_admin(ctx, config.ADMIN_ROLE):
@@ -75,7 +75,7 @@ class Admin(object):
         await ctx.send(msg)
 
     @commands.command(pass_context=True)
-    async def flipcoin(self, ctx, *users: list):
+    async def flipcoin(self, ctx, *users):
         """Faire un pile ou face (pile/face)"""
         if not static_var.status_commands.get('flipcoin', False):
             await ctx.send(_("{0.message.author.mention} this command is disabled").format(ctx))
