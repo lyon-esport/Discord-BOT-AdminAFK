@@ -35,42 +35,42 @@
 # termes.
 # ----------------------------------------------------------------------------
 
-############################
-##########Discord###########
-############################
+##############################
+########## Discord ###########
+##############################
 
-ADMIN_ROLE = [] #Name of admin roles
+ADMIN_ROLE = []      # Name of admin roles
 
-MUTED_ROLE = '' #Name of muted role
+MUTED_ROLE = ''      # Name of muted role
 
-GOTV_CHANNEL =  #ID of the channel on discord
-ANNOUNCEMENT =  #ID of the channel on discord
+GOTV_CHANNEL = ""    # ID of the channel on discord
+ANNOUNCEMENT = ""    # ID of the channel on discord
 
-GENERAL_LOGS =  #ID of the channel on discord
-COMMAND_LOGS =  #ID of the channel on discord
+GENERAL_LOGS = ""    # ID of the channel on discord
+COMMAND_LOGS = ""    # ID of the channel on discord
 
-TOKEN = '' #Token of discord BOT
+TOKEN = ''           # Token of discord BOT
 
-############################
-############eBot############
-############################
+##############################
+############ eBot ############
+##############################
 
-URL_EBOT = '' #Base url of eBot
+URL_EBOT = ''        # Base url of eBot
 
-EBOT_HOSTNAME = '' #Hostname of eBot Database
-EBOT_PORT = '' #Port of eBot Database
-EBOT_DBNAME = '' #Dbname of eBot Database
-EBOT_USERNAME = ''  #Username of eBot Database
-EBOT_PASSWORD = '' #Password of eBot Database
+EBOT_HOSTNAME = ''   # Hostname of eBot Database
+EBOT_PORT = ''       # Port of eBot Database
+EBOT_DBNAME = ''     # Database name of eBot Database
+EBOT_USERNAME = ''   # Username of eBot Database
+EBOT_PASSWORD = ''   # Password of eBot Database
 
-############################
-#########AdminAFK###########
-############################
+##############################
+######### AdminAFK ###########
+##############################
 
-URL_ADMINAFK = '' #Base url of AdminAFK
+URL_ADMINAFK = ''  # Base url of AdminAFK
 
-############################
-###########Other############
-############################
+##############################
+########### Other ############
+##############################
 
-RULES = '' #Rules link of the tournament
+RULES = ''  # Link to the rules of the tournament
