@@ -24,6 +24,11 @@ Discord BOT AdminAFK will make life better for CS:GO Admins
 6. Set the bot as a bot user. This will give you the token.
 7. Add your bot to your discord (replace 0000000 by your client_id): https://discordapp.com/oauth2/authorize?client_id=0000000&scope=bot&permissions=1
 
+## getting the channel_id
+
+You should put discord in dev mode (https://support.discordapp.com/hc/fr/articles/206346498-O%C3%B9-trouver-l-ID-de-mon-compte-utilisateur-serveur-message-)
+then right click on a channel -> copy channel id
+
 # Usage guide
 
 ## Run the bot

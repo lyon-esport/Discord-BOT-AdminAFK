@@ -75,7 +75,7 @@ class Admin(object):
         await ctx.send(msg)
 
     @commands.command(pass_context=True)
-    async def flipcoin(self, ctx, *user):
+    async def flipcoin(self, ctx, *users: list):
         """Faire un pile ou face (pile/face)"""
         if not static_var.status_commands.get('flipcoin', False):
             await ctx.send(_("{0.message.author.mention} this command is disabled").format(ctx))
@@ -84,17 +84,15 @@ class Admin(object):
             await ctx.send(_("{0.message.author.mention} this commands is restricted to the admins").format(ctx))
             return
 
-        msg = ""
         args = ""
-        if user:
-            for each_user in user:
-                msg = msg + "{0} ".format(each_user)
+        if users:
+            msg = " ".join(users)
             args = msg
         else:
             msg = "{0.message.author.mention} ".format(ctx)
+
         choice = random.choice(static_var.flipcoin)
         msg = msg + "-> {0}".format(choice)
-        emoji = "<:loudspeaker:473169555557187584>"
         embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id), static_var.hex_colors_codes['green'], ctx.message.author.name, ctx.message.author.avatar_url, "Action", "Command used", "Name", "!flipcoin", "Arguments", args)
         await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
         await ctx.send(msg)
