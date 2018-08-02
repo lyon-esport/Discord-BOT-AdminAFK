@@ -55,7 +55,7 @@ List of available commands :'''
 
 # this specifies what extensions to load when the bot starts up
 startup_extensions = [
-    "extensions.CSGO_user",  # CSGO commands (round, flip...)
+    "extensions.CSGOUser",  # CSGO commands (round, flip...)
     "extensions.admin",      # Admin commands (mute, unmute...)
     "extensions.handler_event"
 ]
@@ -70,7 +70,7 @@ async def on_ready():
 
 
 @bot.command(hidden=True)
-@commands.check(check_permissions.check_if_it_is_bot)
+@commands.check(check_permissions.is_bot)
 async def load(extension_name: str):
     """Charger une extension."""
     try:
@@ -82,7 +82,7 @@ async def load(extension_name: str):
 
 
 @bot.command(hidden=True)
-@commands.check(check_permissions.check_if_it_is_bot)
+@commands.check(check_permissions.is_bot)
 async def unload(extension_name: str):
     """Retirer une extension"""
     bot.unload_extension(extension_name)
