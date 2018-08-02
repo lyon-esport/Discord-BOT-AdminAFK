@@ -35,12 +35,18 @@
 # termes.
 # ----------------------------------------------------------------------------
 
-import discord
-from discord.ext import commands
+from config import static_var
 
-def check_if_it_is_bot(ctx):
+
+def is_bot(ctx):
     return ctx.message.author.id == bot.user.id
 
-def check_if_it_is_admin(ctx, group_role):
+
+def is_admin(ctx, group_role):
     role_names = [role.name for role in ctx.message.author.roles]
-    return any(elem in group_role  for elem in role_names)
+    return any(elem in group_role for elem in role_names)
+
+
+def is_command_enabled(command: str) -> bool:
+    """Check if a command is enabled"""
+    return static_var.status_commands.get(command, False) is True
