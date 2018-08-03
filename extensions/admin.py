@@ -42,6 +42,7 @@ import discord
 from discord.ext import commands
 
 from config import config, static_var
+from extensions.constants import disabled_command, restricted_command
 from functions import logs
 
 import gettext
@@ -54,8 +55,6 @@ from functions.check_permissions import is_command_enabled, is_admin
 
 logger = logging.getLogger(__name__)
 
-disabled_command = _("{0.message.author.mention} this command is disabled")
-restricted_command = _("{0.message.author.mention} this commands is restricted to the admins")
 
 class Admin(object):
     def __init__(self, bot):
