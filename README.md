@@ -19,6 +19,7 @@ Discord BOT AdminAFK will make life better for CS:GO Admins
 1. Download or clone –> https://github.com/lyon-esport/Discord-BOT-AdminAFK
 2. Extract the Discord-BOT-AdminAFK files
 3. Install the requirements: `pip install -r requirements.txt`
+4. run `make compile` if you want the translation on your language
 4. Create an application here : https://discordapp.com/developers/applications/
 5. Set the bot as a bot user. This will give you the token.
 6. Add your bot to your discord (replace 0000000 by your client_id): https://discordapp.com/oauth2/authorize?client_id=0000000&scope=bot&permissions=1
