@@ -38,11 +38,11 @@
 from config import static_var
 
 
-def is_bot(ctx):
+def is_bot(ctx) -> bool:
     return ctx.message.author.id == bot.user.id
 
 
-def is_admin(ctx, group_role):
+def is_admin(ctx, group_role) -> bool:
     role_names = [role.name for role in ctx.message.author.roles]
     return any(elem in group_role for elem in role_names)
 
