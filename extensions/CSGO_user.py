@@ -45,6 +45,10 @@ import logging
 
 from functions.check_permissions import is_command_enabled, is_admin
 
+import gettext
+t = gettext.translation('messages', 'locale', fallback=True)
+_ = t.gettext
+
 logger = logging.getLogger(__name__)
 
 

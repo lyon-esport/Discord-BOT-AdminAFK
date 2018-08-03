@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-08-03 10:13+0200\n"
-"PO-Revision-Date: 2018-08-03 10:04+0200\n"
+"POT-Creation-Date: 2018-08-03 10:45+0200\n"
+"PO-Revision-Date: 2018-08-03 10:32+0200\n"
 "Last-Translator: \n"
 "Language: fr_FR\n"
 "Language-Team: fr_FR <LL@li.org>\n"
@@ -42,11 +42,14 @@ msgstr "{0.message.author.mention} -> La commande !{1} est desactivée"
 msgid "Mute an user"
 msgstr "Mute un utilisateur"
 
-#: main.py:84
+#: main.py:85
 msgid "{} loaded."
 msgstr "{} chargé."
 
-#: main.py:92
+#: main.py:93
 msgid "{} removed."
 msgstr "{} enlevé."
+
+#~ msgid "Trying to load extension: %s"
+#~ msgstr "Tentative de chargement de l'extension: %s"
 

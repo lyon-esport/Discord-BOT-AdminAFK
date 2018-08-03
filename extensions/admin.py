@@ -44,7 +44,9 @@ from discord.ext import commands
 from config import config, static_var
 from functions import logs
 
-from gettext import gettext as _
+import gettext
+t = gettext.translation('messages', 'locale', fallback=True)
+_ = t.gettext
 
 import logging
 
@@ -52,6 +54,8 @@ from functions.check_permissions import is_command_enabled, is_admin
 
 logger = logging.getLogger(__name__)
 
+disabled_command = _("{0.message.author.mention} this command is disabled")
+restricted_command = _("{0.message.author.mention} this commands is restricted to the admins")
 
 class Admin(object):
     def __init__(self, bot):
@@ -62,10 +66,10 @@ class Admin(object):
     async def maps(self, ctx, nb_round: int):
         """Générer de 1 à 7 rounds avec des cartes aléatoires"""
         if not is_command_enabled('maps'):
-            await ctx.send(_("{0.message.author.mention} this command is disabled").format(ctx))
+            await ctx.send(disabled_command.format(ctx))
             return
         if not is_admin(ctx, config.ADMIN_ROLE):
-            await ctx.send(_("{0.message.author.mention} this commands is restricted to the admins").format(ctx))
+            await ctx.send(restricted_command.format(ctx))
             return
 
         if 8 > nb_round > 0:
@@ -88,10 +92,10 @@ class Admin(object):
     async def flipcoin(self, ctx, *users):
         """Faire un pile ou face (pile/face)"""
         if not is_command_enabled('flipcoin'):
-            await ctx.send(_("{0.message.author.mention} this command is disabled").format(ctx))
+            await ctx.send(disabled_command.format(ctx))
             return
         if not is_admin(ctx, config.ADMIN_ROLE):
-            await ctx.send(_("{0.message.author.mention} this commands is restricted to the admins").format(ctx))
+            await ctx.send(restricted_command.format(ctx))
             return
 
         args = ""
@@ -114,10 +118,10 @@ class Admin(object):
     async def demo(self, ctx, demo_id: int, *user):
         """Générer un URL pour télécharger une démo"""
         if not is_command_enabled('demo'):
-            await ctx.send(_("{0.message.author.mention} this command is disabled").format(ctx))
+            await ctx.send(disabled_command.format(ctx))
             return
         if not is_admin(ctx, config.ADMIN_ROLE):
-            await ctx.send(_("{0.message.author.mention} this commands is restricted to the admins").format(ctx))
+            await ctx.send(restricted_command.format(ctx))
             return
 
         msg = ""
@@ -143,7 +147,7 @@ class Admin(object):
     async def enable(self, ctx, command: str):
         """Activer une commande"""
         if not is_admin(ctx, config.ADMIN_ROLE):
-            await ctx.send("{0.message.author.mention} cette commande est réservée aux admins".format(ctx))
+            await ctx.send(restricted_command.format(ctx))
             return
 
         if command in static_var.status_commands:
@@ -162,7 +166,7 @@ class Admin(object):
     async def disable(self, ctx, command: str):
         """Désactiver une commande"""
         if not is_admin(ctx, config.ADMIN_ROLE):
-            await ctx.send("{0.message.author.mention} cette commande est réservée aux admins".format(ctx))
+            await ctx.send(restricted_command.format(ctx))
             return
 
         if command in static_var.status_commands:
@@ -181,7 +185,7 @@ class Admin(object):
     async def status(self, ctx, command: str):
         """Status d'une commande"""
         if not is_admin(ctx, config.ADMIN_ROLE):
-            await ctx.send("{0.message.author.mention} cette commande est réservée aux admins".format(ctx))
+            await ctx.send(restricted_command.format(ctx))
             return
 
         if command in ['enable', 'disable', 'status']:
@@ -206,10 +210,10 @@ class Admin(object):
     async def purge(self, ctx, number: int):
         """Supprimer des messages"""
         if not is_command_enabled('purge', ):
-            await ctx.send(_("{0.message.author.mention} this command is disabled").format(ctx))
+            await ctx.send(disabled_command.format(ctx))
             return
         if not is_admin(ctx, config.ADMIN_ROLE):
-            await ctx.send(_("{0.message.author.mention} this commands is restricted to the admins").format(ctx))
+            await ctx.send(restricted_command.format(ctx))
             return
 
         if 100 > number > 1:
@@ -226,12 +230,12 @@ class Admin(object):
 
     @commands.command(pass_context=True)
     async def ping(self, ctx):
-        """Permet de tester la connectivité du bot"""
+        """Test the connectivty of the bot"""
         if not is_command_enabled('ping', ):
-            await ctx.send(_("{0.message.author.mention} this command is disabled").format(ctx))
+            await ctx.send(disabled_command.format(ctx))
             return
         if not is_admin(ctx, config.ADMIN_ROLE):
-            await ctx.send(_("{0.message.author.mention} this commands is restricted to the admins").format(ctx))
+            await ctx.send(restricted_command.format(ctx))
             return
 
         t1 = time.perf_counter()
@@ -245,14 +249,14 @@ class Admin(object):
         await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
         await ctx.send(msg)
 
-    @commands.command(pass_context=True)
+    @commands.command(pass_context=True, brief=_("Mute an user"))
     async def mute(self, ctx, member):
-        """Permet de muter un utilisateur"""
+        """Mute an user"""
         if not is_command_enabled('mute', ):
-            await ctx.send(_("{0.message.author.mention} this command is disabled").format(ctx))
+            await ctx.send(disabled_command.format(ctx))
             return
         if not is_admin(ctx, config.ADMIN_ROLE):
-            await ctx.send(_("{0.message.author.mention} this commands is restricted to the admins").format(ctx))
+            await ctx.send(restricted_command.format(ctx))
             return
 
         role = discord.utils.get(member.guild.roles, name=config.MUTED_ROLE)
@@ -272,10 +276,10 @@ class Admin(object):
     async def unmute(self, ctx, member):
         """Permet de unmuter un utilisateur"""
         if not is_command_enabled('unmute', ):
-            await ctx.send(_("{0.message.author.mention} this command is disabled").format(ctx))
+            await ctx.send(disabled_command.format(ctx))
             return
         if not is_admin(ctx, config.ADMIN_ROLE):
-            await ctx.send(_("{0.message.author.mention} this commands is restricted to the admins").format(ctx))
+            await ctx.send(restricted_command.format(ctx))
             return
 
         role = discord.utils.get(member.guild.roles, name=config.MUTED_ROLE)
