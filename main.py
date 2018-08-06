@@ -36,6 +36,11 @@
 # ----------------------------------------------------------------------------
 
 import logging
+from datetime import datetime
+from babel.dates import format_date, format_datetime, format_time
+from discord import User
+
+from bot import AdminAFKBot
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -60,7 +65,8 @@ startup_extensions = [
     "extensions.handler_event"
 ]
 
-bot = commands.Bot(command_prefix='!', description=description)
+
+bot = AdminAFKBot(command_prefix='!', description=description)
 
 
 @bot.event

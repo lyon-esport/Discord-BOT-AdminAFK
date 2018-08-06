@@ -35,26 +35,23 @@
 # termes.
 # ----------------------------------------------------------------------------
 
+import logging
 import random
 import time
+from gettext import gettext as _
 
 import discord
 from discord.ext import commands
 
+from bot import AdminAFKBot
 from config import config, static_var
-from functions import logs
-
-from gettext import gettext as _
-
-import logging
-
 from functions.check_permissions import is_command_enabled, is_admin
 
 logger = logging.getLogger(__name__)
 
 
 class Admin(object):
-    def __init__(self, bot):
+    def __init__(self, bot: AdminAFKBot):
         self.bot = bot
         logging.info("Admin function loaded")
 
@@ -77,11 +74,10 @@ class Admin(object):
             await self.bot.get_channel(config.ANNOUNCEMENT).send(msg)
         else:
             msg = 'Merci de sélectionner un nombre dans l\'interval [1;7]'
-            embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id),
-                                    static_var.hex_colors_codes['green'], ctx.message.author.name,
-                                    ctx.message.author.avatar_url, "Action", "Command used", "Name", "!maps",
-                                    "Arguments", "{0}".format(nb_round))
-            await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
+            await self.bot.log("Maps", "", "green", ctx.message.author,
+                               "Action", "Command used",
+                               "Name", "!maps",
+                               "Argument", "{0}".format(nb_round))
         await ctx.send(msg)
 
     @commands.command(pass_context=True)
@@ -103,11 +99,10 @@ class Admin(object):
 
         choice = random.choice(static_var.flipcoin)
         msg = msg + "-> {0}".format(choice)
-        embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id),
-                                static_var.hex_colors_codes['green'], ctx.message.author.name,
-                                ctx.message.author.avatar_url, "Action", "Command used", "Name", "!flipcoin",
-                                "Arguments", args)
-        await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
+        await self.bot.log("Flipcoin", "", "green", ctx.message.author,
+                           "Action", "Command used",
+                           "Name", "!flipcoin",
+                           "Argument", args)
         await ctx.send(msg)
 
     @commands.command(pass_context=True)
@@ -132,11 +127,10 @@ class Admin(object):
         msg = msg + "le lien de téléchargement est disponible ici -> {0} à partir de maintenant vous avez 10 minutes pour nous donner les ticks suspects (3 minimums) passé ce délai la demande sera automatiquement refusée".format(
             link)
         await self.bot.get_channel(config.GOTV_CHANNEL).send(msg)
-        embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id),
-                                static_var.hex_colors_codes['green'], ctx.message.author.name,
-                                ctx.message.author.avatar_url, "Action", "Command used", "Name", "!demo", "Arguments",
-                                args)
-        await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
+        await self.bot.log("Demo command", "", 'green', ctx.message.author,
+                           "Action", "Command used",
+                           "Name", "!demo",
+                           "Arguments", demo_id)
         await ctx.send(msg)
 
     @commands.command(pass_context=True)
@@ -151,11 +145,10 @@ class Admin(object):
             msg = '{0.message.author.mention} -> La commande !{1} a été activée'.format(ctx, command)
         else:
             msg = '{0.message.author.mention} -> La commande !{1} n\'existe pas'.format(ctx, command)
-        embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id),
-                                static_var.hex_colors_codes['green'], ctx.message.author.name,
-                                ctx.message.author.avatar_url, "Action", "Command used", "Name", "!enable", "Argument",
-                                command)
-        await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
+        await self.bot.log("Enable", "", "green", ctx.message.author,
+                           "Action", "Command used",
+                           "Name", "!enable",
+                           "Argument", command)
         await ctx.send(msg)
 
     @commands.command(pass_context=True)
@@ -170,11 +163,10 @@ class Admin(object):
             msg = '{0.message.author.mention} -> La commande !{1} a été désactivée'.format(ctx, command)
         else:
             msg = '{0.message.author.mention} -> La commande !{1} n\'existe pas'.format(ctx, command)
-        embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id),
-                                static_var.hex_colors_codes['green'], ctx.message.author.name,
-                                ctx.message.author.avatar_url, "Action", "Command used", "Name", "!disable", "Argument",
-                                command)
-        await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
+        await self.bot.log("Disable", "", "green", ctx.message.author,
+                           "Action", "Command used",
+                           "Name", "!disable",
+                           "Argument", command)
         await ctx.send(msg)
 
     @commands.command(pass_context=True)
@@ -195,16 +187,15 @@ class Admin(object):
                 else:
                     msg = _('{0.message.author.mention} -> Command !{1} is disabled').format(ctx, command)
 
-        embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id),
-                                static_var.hex_colors_codes['green'], ctx.message.author.name,
-                                ctx.message.author.avatar_url, "Action", "Command used", "Name", "!status", "Argument",
-                                command)
-        await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
+        await self.bot.log("Status", "", "green", ctx.message.author,
+                           "Action", "Command used",
+                           "Name", "!status",
+                           "Argument", command)
         await ctx.send(msg)
 
-    @commands.command(pass_context=True)
+    @commands.command(pass_context=True, brief=_("Delete messages from a channel"))
     async def purge(self, ctx, number: int):
-        """Supprimer des messages"""
+        """Delete messages from a channel"""
         if not is_command_enabled('purge', ):
             await ctx.send(_("{0.message.author.mention} this command is disabled").format(ctx))
             return
@@ -218,11 +209,10 @@ class Admin(object):
             msg = "{0.message.author.mention} -> AdminAFK ne peut supprimer que des messages dans un intervalle [2, 99]".format(
                 ctx)
             await ctx.send(msg)
-        embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id),
-                                static_var.hex_colors_codes['green'], ctx.message.author.name,
-                                ctx.message.author.avatar_url, "Action", "Command used", "Name", "!purge", "Argument",
-                                "{0}".format(number))
-        await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
+        await self.bot.log("Purge", "The purge a started, RUUUUN!", "green", ctx.message.author,
+                           "Action", "Command used",
+                           "Name", "!purge",
+                           "Argument", "{0}".format(number))
 
     @commands.command(pass_context=True)
     async def ping(self, ctx):
@@ -239,10 +229,9 @@ class Admin(object):
             pass
         t2 = time.perf_counter()
         msg = 'Pong: {}ms !'.format(round((t2 - t1) * 1000))
-        embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id),
-                                static_var.hex_colors_codes['green'], ctx.message.author.name,
-                                ctx.message.author.avatar_url, "Action", "Command used", "Name", "!ping", "", "")
-        await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
+        await self.bot.log("Ping", "Ping called", "green", ctx.message.author,
+                           "Action", "Command used",
+                           "Name", "!ping")
         await ctx.send(msg)
 
     @commands.command(pass_context=True)
@@ -261,11 +250,10 @@ class Admin(object):
         else:
             await member.add_roles(role)
             msg = "{0.mention} a été muté par {1.message.author.mention} !".format(member, ctx)
-        embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id),
-                                static_var.hex_colors_codes['green'], ctx.message.author.name,
-                                ctx.message.author.avatar_url, "Action", "Command used", "Name", "!mute", "Arguments",
-                                member.mention)
-        await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
+        await self.bot.log("Mute", "Mute called", "green", ctx.message.author,
+                           "Action", "Command used",
+                           "Name", "!mute",
+                           "Arguments", member.mention)
         await ctx.send(msg)
 
     @commands.command(pass_context=True)
@@ -284,11 +272,11 @@ class Admin(object):
             msg = "{0.mention} a été démuté par {1.message.author.mention} !".format(member, ctx)
         else:
             msg = "{0.mention} n'était pas muté !".format(member)
-        embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id),
-                                static_var.hex_colors_codes['green'], ctx.message.author.name,
-                                ctx.message.author.avatar_url, "Action", "Command used", "Name", "!unmute", "Arguments",
-                                member.mention)
-        await self.bot.get_channel(config.COMMAND_LOGS).send(embed=embed)
+
+        await self.bot.log("Unmute", "Unmute called", "green", ctx.message.author,
+                           "Action", "Command used",
+                           "Name", "!unmute",
+                           "Arguments", member.mention)
         await ctx.send(msg)
 
 
