@@ -46,7 +46,8 @@ from discord.ext import commands
 from bot import AdminAFKBot
 from config import config, static_var
 from extensions.constants import disabled_command, restricted_command
-from functions.check_permissions import is_command_enabled, is_admin
+from functions import decorators
+from functions.check_permissions import is_command_enabled, is_in_group, is_admin
 
 logger = logging.getLogger(__name__)
 
@@ -56,15 +57,11 @@ class Admin(object):
         self.bot = bot
         logging.info("Admin function loaded")
 
-    @commands.command(pass_context=True)
+    @commands.command(pass_context=True, brief=_("Generate 1 to 7 rounds with random maps"))
+    @decorators.is_admin
+    @decorators.is_command_enabled('maps')
     async def maps(self, ctx, nb_round: int):
         """Générer de 1 à 7 rounds avec des cartes aléatoires"""
-        if not is_command_enabled('maps'):
-            await ctx.send(disabled_command.format(ctx))
-            return
-        if not is_admin(ctx, config.ADMIN_ROLE):
-            await ctx.send(restricted_command.format(ctx))
-            return
 
         if 8 > nb_round > 0:
             maps = random.sample(static_var.mapool_csgo, nb_round)
@@ -75,21 +72,18 @@ class Admin(object):
             await self.bot.get_channel(config.ANNOUNCEMENT).send(msg)
         else:
             msg = 'Merci de sélectionner un nombre dans l\'interval [1;7]'
-            await self.bot.log("Maps", "", "green", ctx.message.author,
-                               "Action", "Command used",
-                               "Name", "!maps",
-                               "Argument", "{0}".format(nb_round))
+
+        await self.bot.log("Maps", "", "green", ctx.message.author,
+                           "Action", "Command used",
+                           "Name", "!maps",
+                           "Argument", "{0}".format(nb_round))
         await ctx.send(msg)
 
-    @commands.command(pass_context=True)
+    @commands.command(pass_context=True, brief=_("Flip a coin (head/tail)"))
+    @decorators.is_admin
+    @decorators.is_command_enabled('flipcoin')
     async def flipcoin(self, ctx, *users):
         """Faire un pile ou face (pile/face)"""
-        if not is_command_enabled('flipcoin'):
-            await ctx.send(disabled_command.format(ctx))
-            return
-        if not is_admin(ctx, config.ADMIN_ROLE):
-            await ctx.send(restricted_command.format(ctx))
-            return
 
         args = ""
         if users:
@@ -106,15 +100,11 @@ class Admin(object):
                            "Argument", args)
         await ctx.send(msg)
 
-    @commands.command(pass_context=True)
+    @commands.command(pass_context=True, brief=_("Generate an URL for downloading a demo"))
+    @decorators.is_admin
+    @decorators.is_command_enabled('demo')
     async def demo(self, ctx, demo_id: int, *user):
         """Générer un URL pour télécharger une démo"""
-        if not is_command_enabled('demo'):
-            await ctx.send(disabled_command.format(ctx))
-            return
-        if not is_admin(ctx, config.ADMIN_ROLE):
-            await ctx.send(restricted_command.format(ctx))
-            return
 
         msg = ""
         args = ""
@@ -134,48 +124,42 @@ class Admin(object):
                            "Arguments", demo_id)
         await ctx.send(msg)
 
-    @commands.command(pass_context=True)
+    @commands.command(pass_context=True, brief=_("Activate a command"))
+    @decorators.is_admin
     async def enable(self, ctx, command: str):
         """Activer une commande"""
-        if not is_admin(ctx, config.ADMIN_ROLE):
-            await ctx.send(restricted_command.format(ctx))
-            return
 
         if command in static_var.status_commands:
-            static_var.status_commands[command] = "1"
-            msg = '{0.message.author.mention} -> La commande !{1} a été activée'.format(ctx, command)
+            static_var.status_commands[command] = True
+            msg = _("{user} -> Command !{command} has been activated").format(user=ctx.message.author.mention, command=command)
         else:
-            msg = '{0.message.author.mention} -> La commande !{1} n\'existe pas'.format(ctx, command)
+            msg = _("{user} -> Command !{command} doesn't exists").format(user=ctx.message.author.mention, command=command)
         await self.bot.log("Enable", "", "green", ctx.message.author,
                            "Action", "Command used",
                            "Name", "!enable",
                            "Argument", command)
         await ctx.send(msg)
 
-    @commands.command(pass_context=True)
+    @commands.command(pass_context=True, brief=_("Disable a command"))
+    @decorators.is_admin
     async def disable(self, ctx, command: str):
         """Désactiver une commande"""
-        if not is_admin(ctx, config.ADMIN_ROLE):
-            await ctx.send(restricted_command.format(ctx))
-            return
 
         if command in static_var.status_commands:
-            static_var.status_commands[command] = "0"
-            msg = '{0.message.author.mention} -> La commande !{1} a été désactivée'.format(ctx, command)
+            static_var.status_commands[command] = False
+            msg = _("{user} -> Command !{command} has been deactivated").format(user=ctx.message.author.mention, command=command)
         else:
-            msg = '{0.message.author.mention} -> La commande !{1} n\'existe pas'.format(ctx, command)
+            msg = _("{user} -> Command !{command} doesn't exists").format(user=ctx.message.author.mention, command=command)
         await self.bot.log("Disable", "", "green", ctx.message.author,
                            "Action", "Command used",
                            "Name", "!disable",
                            "Argument", command)
         await ctx.send(msg)
 
-    @commands.command(pass_context=True)
+    @commands.command(pass_context=True, brief=_("Get if an command is enabled or disabled"))
+    @decorators.is_admin
     async def status(self, ctx, command: str):
         """Status d'une commande"""
-        if not is_admin(ctx, config.ADMIN_ROLE):
-            await ctx.send(restricted_command.format(ctx))
-            return
 
         if command in ['enable', 'disable', 'status']:
             msg = '{0.message.author.mention} -> La commande !enable, !disable et !status sont toujours activées'.format(ctx)
@@ -195,14 +179,10 @@ class Admin(object):
         await ctx.send(msg)
 
     @commands.command(pass_context=True, brief=_("Delete messages from a channel"))
+    @decorators.is_admin
+    @decorators.is_command_enabled('purge')
     async def purge(self, ctx, number: int):
         """Delete messages from a channel"""
-        if not is_command_enabled('purge', ):
-            await ctx.send(disabled_command.format(ctx))
-            return
-        if not is_admin(ctx, config.ADMIN_ROLE):
-            await ctx.send(restricted_command.format(ctx))
-            return
 
         if 100 > number > 1:
             await ctx.channel.purge(limit=int(number + 1))
@@ -215,14 +195,16 @@ class Admin(object):
                            "Name", "!purge",
                            "Argument", "{0}".format(number))
 
-    @commands.command(pass_context=True)
+    @commands.command(pass_context=True, brief=_("Test the connectivity of the bot"))
+    @decorators.is_admin
+    @decorators.is_command_enabled('ping')
     async def ping(self, ctx):
-        """Test the connectivty of the bot"""
-        if not is_command_enabled('ping', ):
+        """Test the connectivty of the bot
+
+        Sennd a typing notification and measure the acknowledgement time
+        """
+        if not is_command_enabled('ping'):
             await ctx.send(disabled_command.format(ctx))
-            return
-        if not is_admin(ctx, config.ADMIN_ROLE):
-            await ctx.send(restricted_command.format(ctx))
             return
 
         t1 = time.perf_counter()
@@ -236,12 +218,14 @@ class Admin(object):
         await ctx.send(msg)
 
     @commands.command(pass_context=True, brief=_("Mute an user"))
+    @decorators.is_admin
+    @decorators.is_command_enabled('mute')
     async def mute(self, ctx, member):
         """Mute an user"""
         if not is_command_enabled('mute', ):
             await ctx.send(disabled_command.format(ctx))
             return
-        if not is_admin(ctx, config.ADMIN_ROLE):
+        if not is_admin(ctx):
             await ctx.send(restricted_command.format(ctx))
             return
 
@@ -257,15 +241,11 @@ class Admin(object):
                            "Arguments", member.mention)
         await ctx.send(msg)
 
-    @commands.command(pass_context=True)
+    @commands.command(pass_context=True, brief=_("Unmute an user"))
+    @decorators.is_admin
+    @decorators.is_command_enabled('unmute')
     async def unmute(self, ctx, member):
-        """Permet de unmuter un utilisateur"""
-        if not is_command_enabled('unmute', ):
-            await ctx.send(disabled_command.format(ctx))
-            return
-        if not is_admin(ctx, config.ADMIN_ROLE):
-            await ctx.send(restricted_command.format(ctx))
-            return
+        """Unmute an user"""
 
         role = discord.utils.get(member.guild.roles, name=config.MUTED_ROLE)
         if role in member.roles:
