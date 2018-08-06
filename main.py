@@ -34,20 +34,77 @@
 # pris connaissance de la licence CeCILL, et que vous en avez accepté les
 # termes.
 # ----------------------------------------------------------------------------
+
+import logging
+from datetime import datetime
+from babel.dates import format_date, format_datetime, format_time
+from discord import User
+
+from bot import AdminAFKBot
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+import gettext
+gettext.install('messages', 'locale')
+t = gettext.translation('messages', 'locale', fallback=True)
+_ = t.gettext
+
 import discord
 from discord.ext import commands
-import datetime
 
-def create_log(bot_avatar_url, title, description, colour, member_name, member_icon, field_name, field_value, field_name2, field_value2, field_name3, field_value3):
-    now = datetime.datetime.now().strftime('%a %b %d, %Y at %H:%M %p')
-    embed = discord.Embed(title=title, description=description, colour=colour)
-    embed.set_author(name=member_name, icon_url=member_icon)
-    embed.set_footer(text='Discord BOT AdminAFK | Copyright © Lyon e-Sport 2018', icon_url=bot_avatar_url)
-    if field_name and field_value:
-        embed.add_field(name=field_name, value=field_value)
-    embed.add_field(name='Date', value=now)
-    if field_name2 and field_value2:
-        embed.add_field(name=field_name2, value=field_value2, inline=False)
-    if field_name3 and field_value3:
-        embed.add_field(name=field_name3, value=field_value3)
-    return embed
+import config
+from functions import check_permissions
+
+description = '''Discord BOT AdminAFK is published under license CeCILL v2.1
+Copyright © Lyon e-Sport 2018
+by Ludovic « -MoNsTeRRR » Ortega
+
+List of available commands :'''
+
+# this specifies what extensions to load when the bot starts up
+startup_extensions = [
+    "extensions.CSGO_user",  # CSGO commands (round, flip...)
+    "extensions.admin",      # Admin commands (mute, unmute...)
+    "extensions.handler_event"
+]
+
+
+bot = AdminAFKBot(command_prefix='!', description=description)
+
+
+@bot.event
+async def on_ready():
+    await bot.change_presence(activity=discord.Game(name='AdminAFK by -MoNsTeRRR', type=0))
+    logger.info("Logged as: %s (%s)", bot.user.name, bot.user.id)
+
+
+@bot.command(hidden=True)
+@commands.check(check_permissions.is_bot)
+async def load(extension_name: str):
+    """Charger une extension."""
+    try:
+        bot.load_extension(extension_name)
+    except (AttributeError, ImportError) as e:
+        await bot.say("```py\n{}: {}\n```".format(type(e).__name__, str(e)))
+        return
+    await bot.say(_("{} loaded.").format(extension_name))
+
+
+@bot.command(hidden=True)
+@commands.check(check_permissions.is_bot)
+async def unload(extension_name: str):
+    """Retirer une extension"""
+    bot.unload_extension(extension_name)
+    await bot.say(_("{} removed.").format(extension_name))
+
+
+if __name__ == "__main__":
+    for extension in startup_extensions:
+        try:
+            bot.load_extension(extension)
+        except Exception as e:
+            exc = '{}: {}'.format(type(e).__name__, e)
+            logger.error("Can't load extension %s: %s", extension, exc)
+
+bot.run(config.TOKEN)

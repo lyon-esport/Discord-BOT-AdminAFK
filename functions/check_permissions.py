@@ -35,42 +35,18 @@
 # termes.
 # ----------------------------------------------------------------------------
 
-############################
-##########Discord###########
-############################
+from config import static_var
 
-ADMIN_ROLE = [] #Name of admin roles
 
-MUTED_ROLE = '' #Name of muted role
+def is_bot(ctx) -> bool:
+    return ctx.message.author.id == bot.user.id
 
-GOTV_CHANNEL =  #ID of the channel on discord
-ANNOUNCEMENT =  #ID of the channel on discord
 
-GENERAL_LOGS =  #ID of the channel on discord
-COMMAND_LOGS =  #ID of the channel on discord
+def is_admin(ctx, group_role) -> bool:
+    role_names = [role.name for role in ctx.message.author.roles]
+    return any(elem in group_role for elem in role_names)
 
-TOKEN = '' #Token of discord BOT
 
-############################
-############eBot############
-############################
-
-URL_EBOT = '' #Base url of eBot
-
-EBOT_HOSTNAME = '' #Hostname of eBot Database
-EBOT_PORT = '' #Port of eBot Database
-EBOT_DBNAME = '' #Dbname of eBot Database
-EBOT_USERNAME = ''  #Username of eBot Database
-EBOT_PASSWORD = '' #Password of eBot Database
-
-############################
-#########AdminAFK###########
-############################
-
-URL_ADMINAFK = '' #Base url of AdminAFK
-
-############################
-###########Other############
-############################
-
-RULES = '' #Rules link of the tournament
+def is_command_enabled(command: str) -> bool:
+    """Check if a command is enabled"""
+    return static_var.status_commands.get(command, False) is True

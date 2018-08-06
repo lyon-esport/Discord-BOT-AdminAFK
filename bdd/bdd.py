@@ -35,62 +35,63 @@
 # termes.
 # ----------------------------------------------------------------------------
 
-import sys
-import discord
-from discord.ext import commands
+import pymysql
 
-sys.path.append('config/')
-sys.path.append('class/')
-sys.path.append('functions/')
-sys.path.append('bdd/')
-sys.path.append('event/')
+import logging
+logger = logging.getLogger(__name__)
 
-import config
-import check_permissions
 
-description = '''Discord BOT AdminAFK is published under license CeCILL v2.1
-Copyright © Lyon e-Sport 2018
-by Ludovic « -MoNsTeRRR » Ortega
+def db_connect(hostname, port, dbname, username, password):
+    global connection
+    connection = pymysql.connect(
+        host=hostname,
+        port=int(port),
+        user=username,
+        password=password,
+        db=dbname,
+        charset='utf8',
+        autocommit=True,
+        cursorclass=pymysql.cursors.DictCursor
+    )
 
-List of available commands :'''
 
-# this specifies what extensions to load when the bot starts up
-startup_extensions = ["CSGO_user", "admin", "handler_event"]
-
-bot = commands.Bot(command_prefix='!', description=description)
-
-@bot.event
-async def on_ready():
-    await bot.change_presence(activity=discord.Game(name='AdminAFK by -MoNsTeRRR', type=0))
-    print('Logged in as')
-    print(bot.user.name)
-    print(bot.user.id)
-    print('------')
-
-@bot.command(hidden=True)
-@commands.check(check_permissions.check_if_it_is_bot)
-async def load(extension_name : str):
-    """Charger une extension."""
+def db_select():
+    sql = """"
+    SELECT
+        matchs.id,
+        matchs.team_a_name,
+        matchs.team_b_name,
+        matchs.score_a,
+        matchs.score_b,
+        ta.name AS teama_name,
+        tb.name AS teamb_name,
+        matchs.status,
+        matchs.enable
+    FROM
+        matchs
+    LEFT JOIN
+        maps
+    ON
+        maps.match_id = matchs.id
+    LEFT JOIN
+        teams AS ta
+    ON
+        ta.id = team_a
+    LEFT JOIN
+        teams AS tb
+    ON
+        tb.id = team_b
+    """
     try:
-        bot.load_extension(extension_name)
-    except (AttributeError, ImportError) as e:
-        await bot.say("```py\n{}: {}\n```".format(type(e).__name__, str(e)))
-        return
-    await bot.say("{} chargée.".format(extension_name))
+        with connection.cursor() as cursor:
+            cursor.execute(sql)
+            return cursor.fetchall()
+    except pymysql.err.InternalError as e:
+        code, msg = e.args
+        logger.error("Problem during query, code: %s error: %s", code, msg)
+    except Exception as e:
+        logger.error("Problem during query: %s", e)
 
-@bot.command(hidden=True)
-@commands.check(check_permissions.check_if_it_is_bot)
-async def unload(extension_name : str):
-    """Retirer une extension"""
-    bot.unload_extension(extension_name)
-    await bot.say("{} retirée.".format(extension_name))
 
-if __name__ == "__main__":
-    for extension in startup_extensions:
-        try:
-            bot.load_extension(extension)
-        except Exception as e:
-            exc = '{}: {}'.format(type(e).__name__, e)
-            print('L\'extension {} n\a pas pu être chargée\n{}'.format(extension, exc))
-
-bot.run(config.TOKEN)
+def db_disconnect():
+    connection.close()

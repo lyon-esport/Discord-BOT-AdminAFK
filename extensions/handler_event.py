@@ -34,21 +34,25 @@
 # pris connaissance de la licence CeCILL, et que vous en avez accepté les
 # termes.
 # ----------------------------------------------------------------------------
-import sys
-import discord
-from discord.ext import commands
 import asyncio
 
-sys.path.append('../config/')
-sys.path.append('../functions/')
+import discord
 
-import config
-import static_var
-import logs
+from config import config, static_var
+from functions import logs
 
-class Log():
+import gettext
+t = gettext.translation('messages', 'locale', fallback=True)
+_ = t.gettext
+
+import logging
+logger = logging.getLogger(__name__)
+
+
+class Log(object):
     def __init__(self, bot):
         self.bot = bot
+        logging.info("Log plugin loaded")
 
     async def on_member_unban(self, guild, user):
         """Event : user unbanned"""
@@ -259,6 +263,7 @@ class Log():
         emoji = "<:warning:472139637142323231>"
         embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(message.author.id), static_var.hex_colors_codes['red'], message.author.name, message.author.avatar_url, "Action", "{0} Message deleted".format(emoji), "Message information", "Message sent by {0} deleted in {1}".format(message.author.mention, message.channel.mention), "Content", content)
         await self.bot.get_channel(config.GENERAL_LOGS).send(embed=embed)
+
 
 def setup(bot):
     bot.add_cog(Log(bot))
