@@ -44,7 +44,7 @@ from functions import logs
 
 import logging
 
-from functions.check_permissions import is_command_enabled, is_admin
+from functions.check_permissions import is_command_enabled, is_in_group
 
 import gettext
 t = gettext.translation('messages', 'locale', fallback=True)
@@ -67,7 +67,7 @@ class CSGOUser(object):
 
         msg = ""
         args = ""
-        if is_admin(ctx, config.ADMIN_ROLE) and user:
+        if is_in_group(ctx, config.ADMIN_ROLE) and user:
             for each_user in user:
                 msg = msg + "{0}  ".format(each_user)
             args = msg
@@ -126,7 +126,7 @@ class CSGOUser(object):
         msg = ""
         args = ""
         link = config.URL_ADMINAFK + 'pages/view_connect.php'
-        if is_admin(ctx, config.ADMIN_ROLE) and user:
+        if is_in_group(ctx, config.ADMIN_ROLE) and user:
             for each_user in user:
                 msg = msg + "{0} ".format(each_user)
             args = msg
@@ -150,7 +150,7 @@ class CSGOUser(object):
         msg = ""
         args = ""
         link = config.URL_ADMINAFK + 'pages/bracket.php'
-        if is_admin(ctx, config.ADMIN_ROLE) and user:
+        if is_in_group(ctx, config.ADMIN_ROLE) and user:
             for each_user in user:
                 msg = msg + "{0} ".format(each_user)
             args = msg
@@ -174,7 +174,7 @@ class CSGOUser(object):
         msg = ""
         args = ""
         link = config.URL_ADMINAFK + 'pages/participants.php'
-        if is_admin(ctx, config.ADMIN_ROLE) and user:
+        if is_in_group(ctx, config.ADMIN_ROLE) and user:
             for each_user in user:
                 msg = msg + "{0} ".format(each_user)
             args = msg
@@ -198,7 +198,7 @@ class CSGOUser(object):
         msg = ""
         args = ""
         link = config.URL_ADMINAFK + 'pages/participants.php'
-        if is_admin(ctx, config.ADMIN_ROLE) and user:
+        if is_in_group(ctx, config.ADMIN_ROLE) and user:
             for each_user in user:
                 msg = msg + "{0} ".format(each_user)
             args = msg
@@ -223,7 +223,7 @@ class CSGOUser(object):
         msg = ""
         args = ""
         link = config.RULES
-        if is_admin(ctx, config.ADMIN_ROLE) and user:
+        if is_in_group(ctx, config.ADMIN_ROLE) and user:
             for each_user in user:
                 msg = msg + "{0} ".format(each_user)
             args = msg
@@ -247,7 +247,7 @@ class CSGOUser(object):
         msg = ""
         args = ""
         link = config.URL_EBOT
-        if is_admin(ctx, config.ADMIN_ROLE) and user:
+        if is_in_group(ctx, config.ADMIN_ROLE) and user:
             for each_user in user:
                 msg = msg + "{0} ".format(each_user)
             args = msg
@@ -270,7 +270,7 @@ class CSGOUser(object):
 
         msg = ""
         args = ""
-        if is_admin(ctx, config.ADMIN_ROLE) and user:
+        if is_in_group(ctx, config.ADMIN_ROLE) and user:
             for each_user in user:
                 msg = msg + "{0} ".format(each_user)
             args = msg

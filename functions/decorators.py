@@ -34,23 +34,31 @@
 # pris connaissance de la licence CeCILL, et que vous en avez accepté les
 # termes.
 # ----------------------------------------------------------------------------
+from functools import wraps
 
-from config import static_var, config
-
-
-def is_bot(ctx) -> bool:
-    return ctx.message.author.id == bot.user.id
+from extensions.constants import restricted_command, disabled_command
+from functions import check_permissions
 
 
-def is_in_group(ctx, group_role) -> bool:
-    role_names = [role.name for role in ctx.message.author.roles]
-    return any(elem in group_role for elem in role_names)
+def is_admin(func):
+    @wraps(func)
+    async def wrapper(self, ctx, *args, **kwargs):
+        # If the command is disabled noop the function and send message
+        if not check_permissions.is_admin(ctx):
+            await ctx.send(restricted_command.format(ctx))
+            return None
+        return await func(self, ctx, *args, **kwargs)
+    return wrapper
 
 
-def is_admin(ctx) -> bool:
-    return is_in_group(ctx, config.ADMIN_ROLE)
-
-
-def is_command_enabled(command: str) -> bool:
-    """Check if a command is enabled"""
-    return static_var.status_commands.get(command, False) is True
+def is_command_enabled(command):
+    def wrapper(func):
+        @wraps(func)
+        async def wrap(self, ctx, *args, **kwargs):
+            # if command is disabled, noop the command and send message
+            if not check_permissions.is_command_enabled(command):
+                await ctx.send(disabled_command.format(ctx))
+                return None
+            return await func(self, ctx, *args, **kwargs)
+        return wrap
+    return wrapper
