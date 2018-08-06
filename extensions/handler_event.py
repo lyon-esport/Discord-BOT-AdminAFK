@@ -41,6 +41,10 @@ import discord
 from config import config, static_var
 from functions import logs
 
+import gettext
+t = gettext.translation('messages', 'locale', fallback=True)
+_ = t.gettext
+
 import logging
 logger = logging.getLogger(__name__)
 

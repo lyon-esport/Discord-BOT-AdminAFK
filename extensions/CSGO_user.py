@@ -39,16 +39,21 @@ from discord.ext import commands
 
 from bdd import bdd
 from config import static_var, config
+from extensions.constants import disabled_command
 from functions import logs
 
 import logging
 
 from functions.check_permissions import is_command_enabled, is_admin
 
+import gettext
+t = gettext.translation('messages', 'locale', fallback=True)
+_ = t.gettext
+
 logger = logging.getLogger(__name__)
 
 
-class CSGOUser():
+class CSGOUser(object):
     def __init__(self, bot):
         self.bot = bot
         logging.info("CSGO plugin loaded")
@@ -57,7 +62,7 @@ class CSGOUser():
     async def matchs(self, ctx, *user):
         """Avoir des informations sur les matchs en cours"""
         if not is_command_enabled('matchs'):
-            await ctx.send("{0.message.author.mention} cette commande est désactivée".format(ctx))
+            await ctx.send(disabled_command.format(ctx))
             return
 
         msg = ""
@@ -86,10 +91,12 @@ class CSGOUser():
                     status = "Stop"
                 else:
                     status = "Live"
+
                 if each_match['teama_name'] is None:
                     team_a = each_match['team_a_name']
                 else:
                     team_a = each_match['teama_name']
+
                 if each_match['teamb_name'] is None:
                     team_b = each_match['team_b_name']
                 else:
@@ -103,7 +110,6 @@ class CSGOUser():
                     i = i + 1
                 msg = msg + '{0}({1})\n'.format(static_var.ebot_status[int(each_match['status'])], status)
             msg = msg + "```"
-        emoji = "<:loudspeaker:473169555557187584>"
         embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id),
                                 static_var.hex_colors_codes['green'], ctx.message.author.name,
                                 ctx.message.author.avatar_url, "Action", "Command used", "Name", "!matchs",
@@ -115,7 +121,7 @@ class CSGOUser():
     async def connect(self, ctx, *user):
         """Lien pour avoir le connect des matchs"""
         if not is_command_enabled('connect'):
-            await ctx.send("{0.message.author.mention} cette commande est désactivée".format(ctx))
+            await ctx.send(disabled_command.format(ctx))
             return
         msg = ""
         args = ""
@@ -127,7 +133,6 @@ class CSGOUser():
         else:
             msg = "{0.message.author.mention} ".format(ctx)
         msg = msg + "-> Lien des connects des matchs : {0}".format(link)
-        emoji = "<:loudspeaker:473169555557187584>"
         embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id),
                                 static_var.hex_colors_codes['green'], ctx.message.author.name,
                                 ctx.message.author.avatar_url, "Action", "Command used", "Name", "!connect",
@@ -139,7 +144,7 @@ class CSGOUser():
     async def bracket(self, ctx, *user):
         """Lien du bracket"""
         if not is_command_enabled('bracket'):
-            await ctx.send("{0.message.author.mention} cette commande est désactivée".format(ctx))
+            await ctx.send(disabled_command.format(ctx))
             return
 
         msg = ""
@@ -152,7 +157,6 @@ class CSGOUser():
         else:
             msg = "{0.message.author.mention} ".format(ctx)
         msg = msg + "-> Lien du bracket : {0}".format(link)
-        emoji = "<:loudspeaker:473169555557187584>"
         embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id),
                                 static_var.hex_colors_codes['green'], ctx.message.author.name,
                                 ctx.message.author.avatar_url, "Action", "Command used", "Name", "!bracket",
@@ -164,7 +168,7 @@ class CSGOUser():
     async def participants(self, ctx, *user):
         """Lien des participants"""
         if not is_command_enabled('participants'):
-            await ctx.send("{0.message.author.mention} cette commande est désactivée".format(ctx))
+            await ctx.send(disabled_command.format(ctx))
             return
 
         msg = ""
@@ -177,7 +181,6 @@ class CSGOUser():
         else:
             msg = "{0.message.author.mention} ".format(ctx)
         msg = msg + "-> Lien des participants : {0}".format(link)
-        emoji = "<:loudspeaker:473169555557187584>"
         embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id),
                                 static_var.hex_colors_codes['green'], ctx.message.author.name,
                                 ctx.message.author.avatar_url, "Action", "Command used", "Name", "!participants",
@@ -189,7 +192,7 @@ class CSGOUser():
     async def report(self, ctx, *user):
         """Avoir des informations pour reporter un(e) joueur/équipe"""
         if not is_command_enabled('report'):
-            await ctx.send("{0.message.author.mention} cette commande est désactivée".format(ctx))
+            await ctx.send(disabled_command.format(ctx))
             return
 
         msg = ""
@@ -204,7 +207,6 @@ class CSGOUser():
         msg = msg + " pour faire une demande de gotv vous devez spécifier le match incriminé ainsi que potentiellement les joueurs incriminés. Suite à cela nous vous donnerons un lien que vous devrez regarder et trouver les ticks que vous trouvez suspects (3 minimums)".format(
             link)
         await self.bot.get_channel(config.GOTV_CHANNEL).send(msg)
-        emoji = "<:loudspeaker:473169555557187584>"
         embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id),
                                 static_var.hex_colors_codes['green'], ctx.message.author.name,
                                 ctx.message.author.avatar_url, "Action", "Command used", "Name", "!report",
@@ -215,7 +217,7 @@ class CSGOUser():
     async def rules(self, ctx, *user):
         """Lien du règlement"""
         if not is_command_enabled('rules'):
-            await ctx.send("{0.message.author.mention} cette commande est désactivée".format(ctx))
+            await ctx.send(disabled_command.format(ctx))
             return
 
         msg = ""
@@ -228,7 +230,6 @@ class CSGOUser():
         else:
             msg = "{0.message.author.mention} ".format(ctx)
         msg = msg + "-> Lien du règlement : {0}".format(link)
-        emoji = "<:loudspeaker:473169555557187584>"
         embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id),
                                 static_var.hex_colors_codes['green'], ctx.message.author.name,
                                 ctx.message.author.avatar_url, "Action", "Command used", "Name", "!rules",
@@ -240,7 +241,7 @@ class CSGOUser():
     async def ebot(self, ctx, *user):
         """Lien de l'eBot"""
         if not is_command_enabled('ebot'):
-            await ctx.send("{0.message.author.mention} cette commande est désactivée".format(ctx))
+            await ctx.send(disabled_command.format(ctx))
             return
 
         msg = ""
@@ -253,7 +254,6 @@ class CSGOUser():
         else:
             msg = "{0.message.author.mention} ".format(ctx)
         msg = msg + "-> Lien de l'eBot : {0}".format(link)
-        emoji = "<:loudspeaker:473169555557187584>"
         embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id),
                                 static_var.hex_colors_codes['green'], ctx.message.author.name,
                                 ctx.message.author.avatar_url, "Action", "Command used", "Name", "!ebot",
@@ -265,7 +265,7 @@ class CSGOUser():
     async def gotv(self, ctx, *user):
         """Comment regarder une démo ?"""
         if not is_command_enabled('gotv'):
-            await ctx.send("{0.message.author.mention} cette commande est désactivée".format(ctx))
+            await ctx.send(disabled_command.format(ctx))
             return
 
         msg = ""
@@ -277,7 +277,6 @@ class CSGOUser():
         else:
             msg = "{0.message.author.mention} ".format(ctx)
         msg = msg + "Pour regarder une démo :\n 1)Télécharge la démo\n 2)Dézippe la démo grâce à winrar par exemple\n 3)Dépose le fichier <nom>.dem dans un dossier sans accent par exemple ton bureau\n 4)Lance CS:GO\n 5)Appuye simultanément sur `Shift` et `F2`\n 6)Appuye sur Load...\n 7)Sélectionne le fichier <nom>.dem\n 8)Le jeu va lancer la démo"
-        emoji = "<:loudspeaker:473169555557187584>"
         embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(ctx.message.author.id),
                                 static_var.hex_colors_codes['green'], ctx.message.author.name,
                                 ctx.message.author.avatar_url, "Action", "Command used", "Name", "!gotv",

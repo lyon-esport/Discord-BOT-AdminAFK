@@ -45,12 +45,16 @@ from bot import AdminAFKBot
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+import gettext
+gettext.install('messages', 'locale')
+t = gettext.translation('messages', 'locale', fallback=True)
+_ = t.gettext
+
 import discord
 from discord.ext import commands
 
 import config
 from functions import check_permissions
-from gettext import gettext as _
 
 description = '''Discord BOT AdminAFK is published under license CeCILL v2.1
 Copyright © Lyon e-Sport 2018

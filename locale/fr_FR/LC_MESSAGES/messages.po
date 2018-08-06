@@ -1,0 +1,55 @@
+# French (France) translations for PROJECT.
+# Copyright (C) 2018 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2018.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2018-08-03 10:45+0200\n"
+"PO-Revision-Date: 2018-08-03 10:32+0200\n"
+"Last-Translator: \n"
+"Language: fr_FR\n"
+"Language-Team: fr_FR <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.6.0\n"
+
+#: extensions/admin.py:57
+msgid "{0.message.author.mention} this command is disabled"
+msgstr "{0.message.author.mention} cette commande est desactivée"
+
+#: extensions/admin.py:58
+msgid "{0.message.author.mention} this commands is restricted to the admins"
+msgstr "{0.message.author.mention} cette commande est reservée aux admins"
+
+#: extensions/admin.py:195
+msgid "{0.message.author.mention} -> Command !{1} doesn't exists"
+msgstr "{0.message.author.mention} -> La commande !{1} n'existe pas"
+
+#: extensions/admin.py:198
+msgid "{0.message.author.mention} -> Command !{1} is active"
+msgstr "{0.message.author.mention} -> La commande !{1} est active"
+
+#: extensions/admin.py:200
+msgid "{0.message.author.mention} -> Command !{1} is disabled"
+msgstr "{0.message.author.mention} -> La commande !{1} est desactivée"
+
+#: extensions/admin.py:252
+msgid "Mute an user"
+msgstr "Mute un utilisateur"
+
+#: main.py:85
+msgid "{} loaded."
+msgstr "{} chargé."
+
+#: main.py:93
+msgid "{} removed."
+msgstr "{} enlevé."
+
+#~ msgid "Trying to load extension: %s"
+#~ msgstr "Tentative de chargement de l'extension: %s"
+
