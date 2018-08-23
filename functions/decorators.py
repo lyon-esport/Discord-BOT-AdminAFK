@@ -3,6 +3,7 @@
 #
 # Contributeur(s):
 #     * Ortega Ludovic - ludovic.ortega@lyon-esport.fr
+#     * Etienne Guilluy - etienne.guilluy@lyon-esport.fr
 #
 #  Ce logiciel, Discord BOT AdminAFK, est un programme informatique servant à administrer
 #  et gérer un tournoi CS:GO avec eBot, Toornament et Discord.
