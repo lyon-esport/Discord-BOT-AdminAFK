@@ -57,7 +57,7 @@ def db_connect(hostname, port, dbname, username, password):
 
 
 def db_select():
-    sql = """"
+    sql = """
     SELECT
         matchs.id,
         matchs.team_a_name,
