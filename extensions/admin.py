@@ -221,7 +221,7 @@ class Admin(object):
     @commands.command(pass_context=True, brief=_("Mute an user"))
     @decorators.is_admin
     @decorators.is_command_enabled('mute')
-    async def mute(self, ctx, member):
+    async def mute(self, ctx, member :discord.Member):
         """Mute an user"""
         if not is_command_enabled('mute', ):
             await ctx.send(disabled_command.format(ctx))
@@ -245,7 +245,7 @@ class Admin(object):
     @commands.command(pass_context=True, brief=_("Unmute an user"))
     @decorators.is_admin
     @decorators.is_command_enabled('unmute')
-    async def unmute(self, ctx, member):
+    async def unmute(self, ctx, member :discord.Member):
         """Unmute an user"""
 
         role = discord.utils.get(member.guild.roles, name=config.MUTED_ROLE)
