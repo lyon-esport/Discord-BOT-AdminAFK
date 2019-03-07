@@ -36,6 +36,7 @@
 # termes.
 # ----------------------------------------------------------------------------
 
+import discord
 from discord.ext import commands
 
 from bdd import bdd
@@ -54,7 +55,7 @@ _ = t.gettext
 logger = logging.getLogger(__name__)
 
 
-class CSGOUser(object):
+class CSGOUser(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         logging.info("CSGO plugin loaded")

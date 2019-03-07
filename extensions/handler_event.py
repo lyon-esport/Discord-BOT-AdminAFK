@@ -38,6 +38,7 @@
 import asyncio
 
 import discord
+from discord.ext import commands
 
 from config import config, static_var
 from functions import logs
@@ -50,7 +51,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class Log(object):
+class Log(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         logging.info("Log plugin loaded")

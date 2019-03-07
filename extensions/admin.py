@@ -53,7 +53,7 @@ from functions.check_permissions import is_command_enabled, is_in_group, is_admi
 logger = logging.getLogger(__name__)
 
 
-class Admin(object):
+class Admin(commands.Cog):
     def __init__(self, bot: AdminAFKBot):
         self.bot = bot
         logging.info("Admin function loaded")
@@ -73,12 +73,11 @@ class Admin(object):
             await self.bot.get_channel(config.ANNOUNCEMENT).send(msg)
         else:
             msg = 'Merci de sélectionner un nombre dans l\'interval [1;7]'
-
+            await ctx.send(msg)
         await self.bot.log("Maps", "", "green", ctx.message.author,
                            "Action", "Command used",
                            "Name", "!maps",
                            "Argument", "{0}".format(nb_round))
-        await ctx.send(msg)
 
     @commands.command(pass_context=True, brief=_("Flip a coin (head/tail)"))
     @decorators.is_admin
@@ -123,7 +122,6 @@ class Admin(object):
                            "Action", "Command used",
                            "Name", "!demo",
                            "Arguments", demo_id)
-        await ctx.send(msg)
 
     @commands.command(pass_context=True, brief=_("Activate a command"))
     @decorators.is_admin
@@ -191,7 +189,7 @@ class Admin(object):
             msg = "{0.message.author.mention} -> AdminAFK ne peut supprimer que des messages dans un intervalle [2, 99]".format(
                 ctx)
             await ctx.send(msg)
-        await self.bot.log("Purge", "The purge a started, RUUUUN!", "green", ctx.message.author,
+        await self.bot.log("Purge", "The purge has started, RUUUUN!", "green", ctx.message.author,
                            "Action", "Command used",
                            "Name", "!purge",
                            "Argument", "{0}".format(number))
