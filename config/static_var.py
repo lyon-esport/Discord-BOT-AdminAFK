@@ -74,7 +74,7 @@ flipcoin = ["face", "pile"]
 
 # eBot status
 ebot_status = ["not started", "starting", "warmup knife round", "knife round", "end of the knife round",
-               "warmup 1st side", "first side", "warmup 2nd side", "econd side", "warmup overtime", "first side OT",
+               "warmup 1st side", "first side", "warmup 2nd side", "second side", "warmup overtime", "first side OT",
                "warmup 2nd side OT", "second side OT", "finished", "archived"]
 
 # Active Duty Map Pool csgo
