@@ -78,4 +78,4 @@ ebot_status = ["not started", "starting", "warmup knife round", "knife round", "
                "warmup 2nd side OT", "second side OT", "finished", "archived"]
 
 # Active Duty Map Pool csgo
-mapool_csgo = ["de_dust2", "de_cache", "de_inferno", "de_train", "de_overpass", "de_mirage", "de_nuke"]
+mapool_csgo = ["de_dust2", "de_vertigo", "de_inferno", "de_train", "de_overpass", "de_mirage", "de_nuke"]
