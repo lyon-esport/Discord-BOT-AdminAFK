@@ -44,11 +44,11 @@ ADMIN_ROLE = []      # Name of admin roles
 
 MUTED_ROLE = ''      # Name of muted role
 
-GOTV_CHANNEL = ""    # ID of the channel on discord
-ANNOUNCEMENT = ""    # ID of the channel on discord
+GOTV_CHANNEL =     # ID of the channel on discord
+ANNOUNCEMENT =     # ID of the channel on discord
 
-GENERAL_LOGS = ""    # ID of the channel on discord
-COMMAND_LOGS = ""    # ID of the channel on discord
+GENERAL_LOGS =     # ID of the channel on discord
+COMMAND_LOGS =     # ID of the channel on discord
 
 TOKEN = ''           # Token of discord BOT
 

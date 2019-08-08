@@ -56,6 +56,7 @@ class Log(commands.Cog):
         self.bot = bot
         logging.info("Log plugin loaded")
 
+    @commands.Cog.listener()
     async def on_member_unban(self, guild, user):
         """Event : user unbanned"""
         await asyncio.sleep(1)
@@ -65,6 +66,7 @@ class Log(commands.Cog):
             embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(entry.user.id), static_var.hex_colors_codes['green'], entry.user.name, entry.user.avatar_url, "Action", "{0} User unbanned".format(emoji), "User", user.name, "Content", "The user has been unbanned from the server")
             await self.bot.get_channel(config.GENERAL_LOGS).send(embed=embed)
 
+    @commands.Cog.listener()
     async def on_member_ban(self, guild, user):
         """Event : user banned"""
         await asyncio.sleep(1)
@@ -74,12 +76,14 @@ class Log(commands.Cog):
             embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(entry.user.id), static_var.hex_colors_codes['red'], entry.user.name, entry.user.avatar_url, "Action", "{0} User banned".format(emoji), "User", user.name, "Content", "The user has been banned from the server")
             await self.bot.get_channel(config.GENERAL_LOGS).send(embed=embed)
 
+    @commands.Cog.listener()
     async def on_member_join(self, member):
         """Event : user joined the server"""
         emoji = "<:wave:472141177475563542>"
         embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(member.id), static_var.hex_colors_codes['green'], member.name, member.avatar_url, "Action", "{0} User state".format(emoji), "Content", "User joined", "", "")
         await self.bot.get_channel(config.GENERAL_LOGS).send(embed=embed)
 
+    @commands.Cog.listener()
     async def on_member_update(self, before, after):
         """Event : user updated"""
         if before.nick != after.nick or before.avatar_url != after.avatar_url or set(before.roles) != set(after.roles):
@@ -116,6 +120,7 @@ class Log(commands.Cog):
             embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(after.id), static_var.hex_colors_codes['orange'], after.name, after.avatar_url, "Action", "{0} User state".format(emoji), title_before, content_before, title_after, content_after)
             await self.bot.get_channel(config.GENERAL_LOGS).send(embed=embed)
 
+    @commands.Cog.listener()
     async def on_member_remove(self, member):
         """Event : user left the server"""
         await asyncio.sleep(1)
@@ -128,18 +133,21 @@ class Log(commands.Cog):
                     embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(member.id), static_var.hex_colors_codes['red'], member.name, member.avatar_url, "Action", "{0} User state".format(emoji), "Content", "User left", "", "")
                     await self.bot.get_channel(config.GENERAL_LOGS).send(embed=embed)
 
+    @commands.Cog.listener()
     async def on_guild_channel_create(self, channel):
         """Event : channel created"""
         emoji = "<:new:472152627765968936>"
         embed = logs.create_log(self.bot.user.avatar_url, "", "", static_var.hex_colors_codes['green'], "", "", "Action", "{0} Channel state".format(emoji), "Content", "{0} channel created".format(channel.mention), "", "")
         await self.bot.get_channel(config.GENERAL_LOGS).send(embed=embed)
 
+    @commands.Cog.listener()
     async def on_guild_channel_update(self, before, after):
         """Event : channel updated"""
         emoji = "<:tools:472152893517070346>"
         embed = logs.create_log(self.bot.user.avatar_url, "", "", static_var.hex_colors_codes['orange'], "", "", "Action", "{0} Channel state".format(emoji), "Content", "{0} channel updated".format(after.mention), "", "")
         await self.bot.get_channel(config.GENERAL_LOGS).send(embed=embed)
 
+    @commands.Cog.listener()
     async def on_guild_channel_delete(self, channel):
         """Event : channel deleted"""
         await asyncio.sleep(1)
@@ -149,24 +157,28 @@ class Log(commands.Cog):
             embed = logs.create_log(self.bot.user.avatar_url, "", "", static_var.hex_colors_codes['red'], "", "", "Action", "{0} Channel state".format(emoji), "Content", "#{0} channel deleted".format(entry.before.name), "", "")
             await self.bot.get_channel(config.GENERAL_LOGS).send(embed=embed)
 
+    @commands.Cog.listener()
     async def on_guild_update(self, before, after):
         """Event : server updated"""
         emoji = "<:tools:472152893517070346>"
         embed = logs.create_log(self.bot.user.avatar_url, "", "", static_var.hex_colors_codes['orange'], "", "", "Action", "{0} Server state".format(emoji), "Content", "{0} server setting updated".format(after.name), "", "")
         await self.bot.get_channel(config.GENERAL_LOGS).send(embed=embed)
-
+    
+    @commands.Cog.listener()    
     async def on_guild_role_create(self, role):
         """Event : role created"""
         emoji = "<:new:472152627765968936>"
         embed = logs.create_log(self.bot.user.avatar_url, "", "", static_var.hex_colors_codes['green'], "", "", "Action", "{0} Role state".format(emoji), "Content", "{0} role created".format(role.mention), "", "")
         await self.bot.get_channel(config.GENERAL_LOGS).send(embed=embed)
 
+    @commands.Cog.listener()
     async def on_guild_role_update(self, before, after):
         """Event : role updated"""
         emoji = "<:tools:472152893517070346>"
         embed = logs.create_log(self.bot.user.avatar_url, "", "", static_var.hex_colors_codes['orange'], "", "", "Action", "{0} Role state".format(emoji), "Content", "{0} role updated".format(after.mention), "", "")
         await self.bot.get_channel(config.GENERAL_LOGS).send(embed=embed)
 
+    @commands.Cog.listener()
     async def on_guild_role_delete(self, role):
         """Event : role deleted"""
         await asyncio.sleep(1)
@@ -175,13 +187,15 @@ class Log(commands.Cog):
             emoji = "<:x:472152627765968936>"
             embed = logs.create_log(self.bot.user.avatar_url, "", "", static_var.hex_colors_codes['red'], "", "", "Action", "{0} Role state".format(emoji), "Content", "@{0} role deleted".format(entry.before.name), "", "")
             await self.bot.get_channel(config.GENERAL_LOGS).send(embed=embed)
-
+    
+    @commands.Cog.listener()
     async def on_guild_emojis_update(self, guild, before, after):
         """Event : emojis updated"""
         emoji = "<:tools:472152893517070346>"
         embed = logs.create_log(self.bot.user.avatar_url, "", "", static_var.hex_colors_codes['red'], "", "", "Action", "{0} Emojis state".format(emoji), "Content", "{0} server emojis updated".format(guild.name), "", "")
         await self.bot.get_channel(config.GENERAL_LOGS).send(embed=embed)
 
+    @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
         """Event : voice state"""
         content = ""
@@ -229,6 +243,7 @@ class Log(commands.Cog):
         embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(member.id), static_var.hex_colors_codes['orange'], member.name, member.avatar_url, "Action", "{0} Voice state".format(emoji), "Content", content, "", "")
         await self.bot.get_channel(config.GENERAL_LOGS).send(embed=embed)
 
+    @commands.Cog.listener()
     async def on_message_edit(self, before, after):
         """Event : message edited"""
         if len(after.content)<220:
@@ -255,6 +270,7 @@ class Log(commands.Cog):
             embed = logs.create_log(self.bot.user.avatar_url, "", "User ID : {0}".format(after.author.id), static_var.hex_colors_codes['orange'], after.author, after.author.avatar_url, "Action", "{0} Message state".format(emoji), "State", pinned_state, "Content", after_content)
             await self.bot.get_channel(config.GENERAL_LOGS).send(embed=embed)
 
+    @commands.Cog.listener()
     async def on_message_delete(self, message):
         """Event : message deleted"""
         if len(message.content)<220:
