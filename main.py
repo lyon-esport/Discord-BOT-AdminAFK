@@ -36,6 +36,12 @@
 # termes.
 # ----------------------------------------------------------------------------
 
+import platform
+import os
+
+if platform.system() == 'Windows':
+    os.environ["LC_TIME"] = "en_US"
+
 import logging
 from datetime import datetime
 from babel.dates import format_date, format_datetime, format_time
@@ -108,4 +114,4 @@ if __name__ == "__main__":
             exc = '{}: {}'.format(type(e).__name__, e)
             logger.error("Can't load extension %s: %s", extension, exc)
 
-bot.run(config.TOKEN)
+    bot.run(config.TOKEN)

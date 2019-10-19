@@ -105,3 +105,6 @@ venv.bak/
 
 # afk bot ignore
 config/config.py
+
+# jetbrains IDE
+.idea/
