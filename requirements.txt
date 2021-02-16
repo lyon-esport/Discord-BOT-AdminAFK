@@ -7,6 +7,6 @@ discord.py==1.2.5
 idna==3.1
 multidict==4.5.2
 PyMySQL==0.9.3
-pytz==2019.3
+pytz==2021.1
 websockets==8.1
 yarl==1.3.0
