@@ -5,7 +5,7 @@ Babel==2.9.0
 chardet==3.0.4
 discord.py==1.2.5
 idna==3.1
-multidict==4.5.2
+multidict==5.1.0
 PyMySQL==0.9.3
 pytz==2021.1
 websockets==8.1
